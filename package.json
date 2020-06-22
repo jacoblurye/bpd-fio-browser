@@ -8,9 +8,17 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@material-ui/core": "^4.10.2",
+    "@material-ui/icons": "^4.9.1",
+    "@types/lodash": "^4.14.155",
+    "axios": "^0.19.2",
+    "flexsearch": "nextapps-de/flexsearch",
+    "lodash": "^4.17.15",
+    "moment": "^2.27.0",
     "next": "latest",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "swr": "^0.2.3"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",

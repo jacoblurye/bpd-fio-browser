@@ -1,15 +1,17 @@
-import Link from 'next/link'
-import Layout from '../components/Layout'
+import React from "react";
+import Layout from "components/Layout";
+import { Typography } from "@material-ui/core";
+import { getFieldContactCollection } from "utils/data-pull";
 
-const IndexPage = () => (
-  <Layout title="Home | Next.js + TypeScript Example">
-    <h1>Hello Next.js 👋</h1>
-    <p>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
-    </p>
-  </Layout>
-)
+const IndexPage = () => {
+  React.useEffect(() => {
+    getFieldContactCollection();
+  });
+  return (
+    <Layout title="Home | Boston Police Department FIO Data">
+      <Typography variant="h5">Hello Next.js 👋</Typography>
+    </Layout>
+  );
+};
 
-export default IndexPage
+export default IndexPage;
