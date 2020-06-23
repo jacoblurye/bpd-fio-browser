@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { FieldContact } from "interfaces";
 import { getFieldContactCollection } from "utils/data-pull";
+import { addHeaders } from "utils/api-helpers";
 
 export default async (
   req: NextApiRequest,
@@ -21,5 +22,6 @@ export default async (
     return res.status(404).end("404: report not found");
   }
 
+  addHeaders(res);
   return res.json(report);
 };

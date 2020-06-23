@@ -2,6 +2,7 @@ import { FieldContact } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import FlexSearch, { CreateOptions, Index, SearchResults } from "flexsearch";
 import { getFieldContactCollection } from "utils/data-pull";
+import { addHeaders } from "utils/api-helpers";
 
 const flexSearchConfig: CreateOptions = {
   tokenize: "strict",
@@ -36,5 +37,6 @@ export default async (
     limit: 25,
     page: (page as string) || true,
   });
+  addHeaders(res);
   return res.json(result);
 };
