@@ -53,7 +53,7 @@ const Reports: React.FC = () => {
             fullWidth
             variant="outlined"
             value={query}
-            placeholder="Search BPD field contact records"
+            placeholder="Search 35,000 BPD field contact records"
             onChange={(e) => setQuery(e.currentTarget.value)}
             InputProps={{ endAdornment: <div>🔍</div> }}
           />

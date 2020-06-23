@@ -7,6 +7,7 @@ import {
   Grid,
   Chip,
   ChipProps,
+  makeStyles,
 } from "@material-ui/core";
 // import moment from "moment-timezone";
 
@@ -19,6 +20,18 @@ const titleCase = (str: string) => {
     .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
     .join(" ");
 };
+
+const useStyles = makeStyles({
+  inlineText: {
+    display: "inline",
+  },
+  inlineSearchText: {
+    display: "inline",
+    border: "1px dashed black",
+    borderRadius: 5,
+    padding: 1,
+  },
+});
 
 interface EmojiChipProps extends ChipProps {
   emoji: string;
@@ -52,6 +65,8 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
   report,
   searchTerm,
 }) => {
+  const classes = useStyles();
+
   const narrativeChunks = report.narrative
     ? report.narrative.split(searchTerm)
     : [];
@@ -100,21 +115,16 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
           <Grid item>
             {narrativeChunks.map((chunk, i) => {
               return (
-                <>
-                  <Typography style={{ display: "inline" }}>{chunk}</Typography>
+                <React.Fragment key={i}>
+                  <Typography className={classes.inlineText}>
+                    {chunk}
+                  </Typography>
                   {i !== lastChunk && (
-                    <Typography
-                      style={{
-                        display: "inline",
-                        border: "1px dashed black",
-                        borderRadius: 5,
-                        padding: 1,
-                      }}
-                    >
+                    <Typography className={classes.inlineSearchText}>
                       {searchTerm}
                     </Typography>
                   )}
-                </>
+                </React.Fragment>
               );
             })}
           </Grid>
