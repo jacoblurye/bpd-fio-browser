@@ -1,15 +1,19 @@
 import React from "react";
 import Layout from "components/Layout";
 import { Typography } from "@material-ui/core";
-import { getFieldContactCollection } from "utils/data-pull";
+import axios from "axios";
 
 const IndexPage = () => {
   React.useEffect(() => {
-    getFieldContactCollection();
-  });
+    // wake up report search
+    axios.get('/api/reports/search?q=""');
+  }, []);
   return (
     <Layout title="Home | Boston Police Department FIO Data">
-      <Typography variant="h5">Hello Next.js 👋</Typography>
+      <Typography>
+        Search through the Boston Police Department's Field Interrogation and
+        Observation data set.
+      </Typography>
     </Layout>
   );
 };

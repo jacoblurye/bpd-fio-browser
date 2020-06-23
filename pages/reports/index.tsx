@@ -1,24 +1,51 @@
 import React from "react";
 import Layout from "components/Layout";
 import axios from "axios";
-import throttle from "lodash/throttle";
-import { Grid, TextField } from "@material-ui/core";
+import {
+  Grid,
+  TextField,
+  Fade,
+  Card,
+  CardContent,
+  Button,
+} from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { FieldContact } from "interfaces";
+import { SearchResults } from "flexsearch";
 
-const THROTTLE_WAIT = 500;
+const searchReports = (q: string, page?: string) => {
+  return axios
+    .get<SearchResults<FieldContact>>("/api/reports/search", {
+      params: { q, page },
+    })
+    .then(({ data }) => data);
+};
 
 const Reports: React.FC = () => {
   const [query, setQuery] = React.useState<string>("");
+  const [nextPage, setNextPage] = React.useState<string | undefined>();
   const [reports, setReports] = React.useState<FieldContact[] | undefined>();
-  const updateSearchQuery = throttle(() => {
-    axios
-      .get<FieldContact[]>("/api/reports/search", { params: { q: query } })
-      .then(({ data }) => setReports(data));
-  }, THROTTLE_WAIT);
+  const runNewQuery = () => {
+    setNextPage(undefined);
+    searchReports(query).then(({ result, next }) => {
+      setReports(result);
+      setNextPage(next);
+    });
+  };
+  const loadMore = () => {
+    if (nextPage && reports) {
+      searchReports(query, nextPage).then(({ result, next }) => {
+        setReports([...reports, ...result]);
+        setNextPage(next);
+      });
+    }
+  };
+
   React.useEffect(() => {
-    updateSearchQuery();
+    runNewQuery();
   }, [query]);
+
+  const showLoadMore = reports && reports.length > 0 && nextPage;
 
   return (
     <Layout title="Reports | Boston Police Department FIO Data">
@@ -26,19 +53,30 @@ const Reports: React.FC = () => {
         <Grid item>
           <TextField
             fullWidth
-            size="small"
             variant="outlined"
             value={query}
             placeholder="Search BPD field contact records"
             onChange={(e) => setQuery(e.currentTarget.value)}
+            onSubmit={() => console.log("submitted!")}
             InputProps={{ endAdornment: <Search /> }}
           />
         </Grid>
         {reports?.map(({ fcNum, narrative }) => (
           <Grid item key={fcNum}>
-            {narrative}
+            <Fade in={true}>
+              <Card>
+                <CardContent>{narrative}</CardContent>
+              </Card>
+            </Fade>
           </Grid>
         ))}
+        {showLoadMore && (
+          <Grid item>
+            <Button fullWidth onClick={loadMore}>
+              load more
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Layout>
   );

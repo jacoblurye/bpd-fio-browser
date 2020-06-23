@@ -1,6 +1,6 @@
 import { FieldContact } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
-import FlexSearch, { CreateOptions, Index } from "flexsearch";
+import FlexSearch, { CreateOptions, Index, SearchResults } from "flexsearch";
 import { getFieldContactCollection } from "utils/data-pull";
 
 const flexSearchConfig: CreateOptions = {
@@ -14,10 +14,10 @@ const flexSearchConfig: CreateOptions = {
 let INDEX: Index<FieldContact>;
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<FieldContact[]>
+  res: NextApiResponse<SearchResults<FieldContact>>
 ) => {
   const {
-    query: { q },
+    query: { q, page },
   } = req;
 
   // Build the search index if it doesn't exist
@@ -31,9 +31,10 @@ export default async (
   }
 
   // @ts-ignore
-  const result: FieldContact[] = INDEX.search({
+  const result: SearchResults<FieldContact> = INDEX.search({
     query: q as string,
     limit: 25,
+    page: (page as string) || true,
   });
   return res.json(result);
 };
