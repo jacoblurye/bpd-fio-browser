@@ -4,15 +4,18 @@ import axios from "axios";
 import { Grid, TextField, Fade, Button } from "@material-ui/core";
 import { FieldContact } from "interfaces";
 import { SearchResults } from "flexsearch";
+import throttle from "lodash/throttle";
 import ReportSummaryCard from "components/ReportSummaryCard";
 
-const searchReports = (q: string, page?: string) => {
+const THROTTLE_RATE = 300;
+
+const searchReports = throttle((query: string, page?: string) => {
   return axios
     .get<SearchResults<FieldContact>>("/api/reports/search", {
-      params: { q, page },
+      params: { q: query.trim(), page },
     })
     .then(({ data }) => data);
-};
+}, THROTTLE_RATE);
 
 const Reports: React.FC = () => {
   React.useEffect(() => {
