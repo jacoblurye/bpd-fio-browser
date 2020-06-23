@@ -2,7 +2,7 @@
 
 export type FieldContact = {
   fcNum: string;
-  contactDate: Date;
+  contactDate: number;
   circumstance: "encountered" | "stopped" | "observed";
   contactOfficer: string | null;
   contactOfficerName: string | null;

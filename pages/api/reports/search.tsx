@@ -7,7 +7,7 @@ const flexSearchConfig: CreateOptions = {
   tokenize: "strict",
   doc: {
     id: "fcNum",
-    field: ["narrative", "basis", "circumstance"],
+    field: "narrative",
   },
 };
 

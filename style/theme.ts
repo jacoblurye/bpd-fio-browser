@@ -2,6 +2,9 @@ import { createMuiTheme } from "@material-ui/core/styles";
 
 // @ts-ignore
 const theme = createMuiTheme({
+  shape: {
+    borderRadius: 25,
+  },
   typography: {
     fontFamily: "Helvetica Neue",
   },
@@ -15,7 +18,6 @@ const theme = createMuiTheme({
       root: {
         boxShadow: "none",
         border: "1px solid #cfd0d0",
-        borderRadius: 5,
       },
     },
   },
