@@ -63,7 +63,7 @@ const Reports: React.FC = () => {
         </Grid>
         {reports?.map((report) => (
           <Grid item key={report.fcNum}>
-            <Fade in={true}>
+            <Fade in={true} timeout={300}>
               <ReportSummaryCard report={report} searchTerm={query} />
             </Fade>
           </Grid>

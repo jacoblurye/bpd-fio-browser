@@ -42,7 +42,7 @@ const EmojiChip: React.FC<EmojiChipProps> = ({ emoji, label, ...props }) => {
   return (
     <Chip
       label={
-        <Grid container spacing={1} alignItems="baseline">
+        <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
           <Grid item>
             <Typography>{emoji}</Typography>
           </Grid>
@@ -134,6 +134,4 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
   );
 };
 
-export default React.memo(ReportSummaryCard, () => {
-  return true;
-});
+export default ReportSummaryCard;
