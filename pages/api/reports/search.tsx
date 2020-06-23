@@ -4,7 +4,7 @@ import FlexSearch, { CreateOptions, Index } from "flexsearch";
 import { getFieldContactCollection } from "utils/data-pull";
 
 const flexSearchConfig: CreateOptions = {
-  profile: "memory",
+  tokenize: "strict",
   doc: {
     id: "fcNum",
     field: ["narrative", "basis", "circumstance"],
