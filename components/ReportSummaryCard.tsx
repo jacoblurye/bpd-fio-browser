@@ -30,8 +30,12 @@ const EmojiChip: React.FC<EmojiChipProps> = ({ emoji, label, ...props }) => {
     <Chip
       label={
         <Grid container spacing={1} alignItems="baseline">
-          <Grid item>{emoji}</Grid>
-          <Grid item>{label}</Grid>
+          <Grid item>
+            <Typography>{emoji}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>{label}</Typography>
+          </Grid>
         </Grid>
       }
       {...props}
