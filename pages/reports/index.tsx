@@ -26,11 +26,12 @@ const Reports: React.FC = () => {
         <Grid item>
           <TextField
             fullWidth
+            size="small"
             variant="outlined"
             value={query}
+            placeholder="Search BPD field contact records"
             onChange={(e) => setQuery(e.currentTarget.value)}
             InputProps={{ endAdornment: <Search /> }}
-            inputProps={{ placeholder: "Search BPD field contact records" }}
           />
         </Grid>
         {reports?.map(({ fcNum, narrative }) => (

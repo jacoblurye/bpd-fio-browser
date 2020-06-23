@@ -4,6 +4,7 @@ import FlexSearch, { CreateOptions, Index } from "flexsearch";
 import { getFieldContactCollection } from "utils/data-pull";
 
 const flexSearchConfig: CreateOptions = {
+  profile: "memory",
   doc: {
     id: "fcNum",
     field: ["narrative", "basis", "circumstance"],
@@ -29,13 +30,10 @@ export default async (
     console.log("build complete", Date.now());
   }
 
-  console.log("starting search");
-  console.log(INDEX.info());
   // @ts-ignore
   const result: FieldContact[] = INDEX.search({
     query: q as string,
     limit: 25,
   });
-  console.log("search complete");
   return res.json(result);
 };
