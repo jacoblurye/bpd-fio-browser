@@ -98,7 +98,7 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
               <Grid item>
                 <EmojiChip emoji={"❓"} label={basis} />
               </Grid>
-              {report.people.map((person) => {
+              {report.people.map((person, i) => {
                 const race = person.race || UNKNOWN;
                 const gender = person.sex || UNKNOWN;
                 const profile =
@@ -106,7 +106,7 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
                     ? UNKNOWN
                     : titleCase(`${race} ${gender}`);
                 return (
-                  <Grid item>
+                  <Grid key={i} item>
                     <EmojiChip emoji={"👤"} label={profile} />
                   </Grid>
                 );
