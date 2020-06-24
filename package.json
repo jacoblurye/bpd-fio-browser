@@ -10,6 +10,7 @@
   "dependencies": {
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
+    "@n8tb1t/use-scroll-position": "^1.0.43",
     "@types/lodash": "^4.14.155",
     "axios": "^0.19.2",
     "flexsearch": "nextapps-de/flexsearch",

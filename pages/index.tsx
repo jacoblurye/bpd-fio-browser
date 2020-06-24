@@ -5,15 +5,14 @@ import {
   Grid,
   TextField,
   Fade,
-  Button,
   IconButton,
-  CircularProgress,
   Typography,
 } from "@material-ui/core";
 import { FieldContact } from "interfaces";
 import { SearchResults } from "flexsearch";
 import { useForm } from "react-hook-form";
 import ReportSummaryCard from "components/ReportSummaryCard";
+import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 
 const searchReports = (query: string, page?: string) => {
   return axios
@@ -26,27 +25,33 @@ const searchReports = (query: string, page?: string) => {
 const SEARCH_BOX = "search-box";
 
 const Reports: React.FC = () => {
-  React.useEffect(() => {
-    // warm up the serverless endpoint (random string to force a cache miss)
-    searchReports(Math.random().toString());
-  }, []);
-
   const { handleSubmit, register } = useForm();
-
   const [query, setQuery] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [nextPage, setNextPage] = React.useState<string | undefined>();
   const [reports, setReports] = React.useState<FieldContact[] | undefined>();
-  const runNewQuery = (q: string) => {
+
+  React.useEffect(() => {
+    // Warm up the serverless endpoint (random string to force a cache miss)
+    searchReports(Math.random().toString());
+  }, []);
+
+  // Execute a search query based on the search box contents
+  const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
+    setQuery(q);
     setLoading(true);
     searchReports(q).then(({ result, next }) => {
       setReports(result);
       setNextPage(next);
       setLoading(false);
     });
-  };
-  const loadMore = () => {
-    if (nextPage && reports && query) {
+  });
+
+  // Load the next page of query results if the user nears the bottom of the page
+  useScrollPosition(({ currPos }) => {
+    const isAtThreshold =
+      -currPos.y > document.body.offsetHeight - window.screen.availHeight;
+    if (isAtThreshold && nextPage && reports && query) {
       setLoading(true);
       searchReports(query, nextPage).then(({ result, next }) => {
         setReports([...reports, ...result]);
@@ -54,13 +59,7 @@ const Reports: React.FC = () => {
         setLoading(false);
       });
     }
-  };
-  const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
-    runNewQuery(q);
-    setQuery(q);
   });
-
-  const showLoadMore = reports && reports.length > 0 && nextPage;
 
   return (
     <Layout title="Reports | Boston Police Department FIO Data">
@@ -96,11 +95,17 @@ const Reports: React.FC = () => {
             </Fade>
           </Grid>
         ))}
-        {showLoadMore && (
-          <Grid item>
-            <Button fullWidth onClick={loadMore}>
-              load more
-            </Button>
+        {query && !nextPage && !loading && (
+          <Grid item xs={12}>
+            <Grid container justify="center">
+              <Typography variant="subtitle2" color="textSecondary">
+                {reports && reports.length
+                  ? `showing ${reports.length} result${
+                      reports.length > 1 ? "s" : ""
+                    } for "${query}"`
+                  : `no results for "${query}"`}
+              </Typography>
+            </Grid>
           </Grid>
         )}
       </Grid>
