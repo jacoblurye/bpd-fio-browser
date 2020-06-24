@@ -67,8 +67,9 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
 }) => {
   const classes = useStyles();
 
+  const lowerCaseSearchTerm = searchTerm.toLowerCase();
   const narrativeChunks = report.narrative
-    ? report.narrative.split(searchTerm)
+    ? report.narrative.split(lowerCaseSearchTerm)
     : [];
   const lastChunk = narrativeChunks.length - 1;
 
