@@ -1,6 +1,5 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
-// @ts-ignore
 const theme = createMuiTheme({
   shape: {
     borderRadius: 25,
