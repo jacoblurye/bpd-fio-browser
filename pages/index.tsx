@@ -23,6 +23,7 @@ const searchReports = (query: string, page?: string) => {
 };
 
 const SEARCH_BOX = "search-box";
+const SCROLL_LOAD_THRESHOLD = 1000;
 
 const Reports: React.FC = () => {
   const { handleSubmit, register } = useForm();
@@ -39,18 +40,27 @@ const Reports: React.FC = () => {
   // Execute a search query based on the search box contents
   const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
     setQuery(q);
+    setReports(undefined);
     setLoading(true);
     searchReports(q).then(({ result, next }) => {
       setReports(result);
       setNextPage(next);
       setLoading(false);
     });
+    // Clear searchbox focus
+    // @ts-ignore
+    document.activeElement?.blur();
   });
 
   // Load the next page of query results if the user nears the bottom of the page
   useScrollPosition(({ currPos }) => {
-    const isAtThreshold =
-      -currPos.y > document.body.offsetHeight - window.screen.availHeight;
+    const thresholdScrollPos =
+      document.body.offsetHeight -
+      window.screen.availHeight -
+      SCROLL_LOAD_THRESHOLD;
+
+    const isAtThreshold = -currPos.y > thresholdScrollPos;
+
     if (isAtThreshold && nextPage && reports && query && !loading) {
       setLoading(true);
       searchReports(query, nextPage).then(({ result, next }) => {
@@ -95,15 +105,18 @@ const Reports: React.FC = () => {
             </Fade>
           </Grid>
         ))}
-        {query && !nextPage && !loading && (
-          <Grid item xs={12}>
+        {!!query && (
+          <Grid item>
             <Grid container justify="center">
               <Typography variant="subtitle2" color="textSecondary">
-                {reports && reports.length
-                  ? `showing ${reports.length} result${
-                      reports.length > 1 ? "s" : ""
-                    } for "${query}"`
-                  : `no results for "${query}"`}
+                {loading
+                  ? "loading..."
+                  : !nextPage &&
+                    (reports?.length
+                      ? `showing ${reports.length} result${
+                          reports.length > 1 ? "s" : ""
+                        } for "${query}"`
+                      : `no results for "${query}"`)}
               </Typography>
             </Grid>
           </Grid>
