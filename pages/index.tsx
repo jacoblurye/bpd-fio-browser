@@ -51,7 +51,7 @@ const Reports: React.FC = () => {
   useScrollPosition(({ currPos }) => {
     const isAtThreshold =
       -currPos.y > document.body.offsetHeight - window.screen.availHeight;
-    if (isAtThreshold && nextPage && reports && query) {
+    if (isAtThreshold && nextPage && reports && query && !loading) {
       setLoading(true);
       searchReports(query, nextPage).then(({ result, next }) => {
         setReports([...reports, ...result]);
