@@ -6,6 +6,7 @@ const theme = createMuiTheme({
   },
   typography: {
     fontFamily: "Helvetica Neue",
+    fontSize: 12,
   },
   props: {
     MuiButtonBase: {
