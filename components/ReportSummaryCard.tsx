@@ -41,6 +41,7 @@ interface EmojiChipProps extends ChipProps {
 const EmojiChip: React.FC<EmojiChipProps> = ({ emoji, label, ...props }) => {
   return (
     <Chip
+      size="small"
       label={
         <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
           <Grid item>
