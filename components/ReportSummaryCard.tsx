@@ -41,7 +41,6 @@ interface EmojiChipProps extends ChipProps {
 const EmojiChip: React.FC<EmojiChipProps> = ({ emoji, label, ...props }) => {
   return (
     <Chip
-      size="small"
       label={
         <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
           <Grid item>
@@ -105,7 +104,7 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
                 const profile =
                   !person.race && !person.sex
                     ? UNKNOWN
-                    : titleCase(`${race}, ${gender}`);
+                    : titleCase(`${race} ${gender}`);
                 return (
                   <Grid key={i} item>
                     <EmojiChip emoji={"👤"} label={profile} />
