@@ -1,16 +1,9 @@
 import { FieldContact } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import FlexSearch, { CreateOptions, Index, SearchResults } from "flexsearch";
-import { getFieldContactCollection } from "utils/data-pull";
 import { addHeaders } from "utils/api-helpers";
-
-const flexSearchConfig: CreateOptions = {
-  tokenize: "strict",
-  doc: {
-    id: "fcNum",
-    field: "narrative",
-  },
-};
+import flexSearchConfig from "flexsearch.json";
+import loadFieldContactIndex from "__generated__/loadFieldContactIndex";
 
 let INDEX: Index<FieldContact>;
 export default async (
@@ -24,10 +17,8 @@ export default async (
   // Build the search index if it doesn't exist
   if (INDEX === undefined) {
     console.log("building new flexsearch index", Date.now());
-    INDEX = FlexSearch.create(flexSearchConfig);
-    const collection = await getFieldContactCollection();
-    // @ts-ignore
-    INDEX.add(Object.values(collection));
+    INDEX = FlexSearch.create(flexSearchConfig as CreateOptions);
+    INDEX.import(loadFieldContactIndex());
     console.log("build complete", Date.now());
   }
 

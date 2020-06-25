@@ -2,8 +2,8 @@
   "name": "with-typescript",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
+    "dev": "node scripts/build-fs-index.js && next",
+    "build": "node scripts/build-fs-index.js && next build",
     "start": "next start",
     "type-check": "tsc"
   },

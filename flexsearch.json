@@ -1,0 +1,7 @@
+{
+  "tokenize": "strict",
+  "doc": {
+    "id": "fcNum",
+    "field": "narrative"
+  }
+}
