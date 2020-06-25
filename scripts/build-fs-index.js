@@ -3,6 +3,7 @@ const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
 const zlib = require("zlib");
+require("dotenv").config();
 
 const projectPath = path.join(__dirname, "..");
 const configPath = path.join(projectPath, "flexsearch.json");
