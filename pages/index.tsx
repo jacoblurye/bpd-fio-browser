@@ -9,21 +9,27 @@ import {
   Typography,
 } from "@material-ui/core";
 import { FieldContact } from "interfaces";
-import { SearchResults } from "flexsearch";
 import { useForm } from "react-hook-form";
 import ReportSummaryCard from "components/ReportSummaryCard";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
+import { FCSearchResult } from "./api/reports/search";
 
-const searchReports = (query: string, page?: string) => {
-  return axios
-    .get<SearchResults<FieldContact>>("/api/reports/search", {
-      params: { q: query.trim(), page },
-    })
-    .then(({ data }) => data);
-};
-
+const PAGE_LIMIT = 50;
 const SEARCH_BOX = "search-box";
 const SCROLL_LOAD_THRESHOLD = 1000;
+
+const searchReports = (query: string, page?: string) => {
+  const q = {
+    query: query.trim(),
+    page: page || true,
+    limit: PAGE_LIMIT,
+  };
+  return axios
+    .get<FCSearchResult>("/api/reports/search", {
+      params: { q },
+    })
+    .then(({ data: { results } }) => results);
+};
 
 const Reports: React.FC = () => {
   const { handleSubmit, register } = useForm();

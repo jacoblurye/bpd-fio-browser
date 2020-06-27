@@ -5,7 +5,8 @@
     "dev": "node scripts/build-fs-index.js && next",
     "build": "node scripts/build-fs-index.js && next build",
     "start": "next start",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "build-index": "node scripts/build-fs-index.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.10.2",
