@@ -1,5 +1,8 @@
 // Shared interfaces used throughout the app.
 
+import { Dictionary } from "lodash";
+import { SearchResults } from "flexsearch";
+
 export type FieldContact = {
   fcNum: string;
   contactDate: number;
@@ -57,3 +60,17 @@ export type Officer = {
   supervisorName: string | null;
   stops: FieldContactCollection;
 };
+
+export interface FCSearchResultSummary {
+  total: number;
+  totalWithFrisk: number;
+  totalByZip: Dictionary<number>;
+  totalByRace: Dictionary<number>;
+  totalByGender: Dictionary<number>;
+  totalByBasis: Dictionary<number>;
+}
+
+export interface FCSearchResult {
+  results: SearchResults<FieldContact>;
+  summary: FCSearchResultSummary;
+}

@@ -2,7 +2,7 @@ import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
   shape: {
-    borderRadius: 25,
+    borderRadius: 5,
   },
   typography: {
     fontFamily: "Helvetica Neue",
