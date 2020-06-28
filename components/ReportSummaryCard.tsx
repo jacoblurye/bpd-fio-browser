@@ -9,9 +9,10 @@ import {
   ChipProps,
   makeStyles,
 } from "@material-ui/core";
+import { Person } from "@material-ui/icons";
 // import moment from "moment-timezone";
 
-const UNKNOWN = "(unknown)";
+const UNKNOWN = "N/A";
 
 const titleCase = (str: string) => {
   return str
@@ -33,28 +34,41 @@ const useStyles = makeStyles({
   },
 });
 
-interface EmojiChipProps extends ChipProps {
-  emoji: string;
-  label: string;
+interface LabelledChipProps extends ChipProps {
+  label?: string;
+  value: string;
 }
 
-const EmojiChip: React.FC<EmojiChipProps> = ({ emoji, label, ...props }) => {
+const LabelledChip: React.FC<LabelledChipProps> = ({
+  label,
+  value,
+  ...props
+}) => {
   return (
     <Chip
       size="small"
       label={
         <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
+          {label && (
+            <Grid item>
+              <Typography color="textSecondary" variant="overline">
+                {label}
+              </Typography>
+            </Grid>
+          )}
           <Grid item>
-            <Typography>{emoji}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography>{label}</Typography>
+            <Typography variant="body2">{value}</Typography>
           </Grid>
         </Grid>
       }
       {...props}
     />
   );
+};
+
+const friskMapping = {
+  y: "Yes",
+  n: "No",
 };
 
 export interface ReportSummaryCardProps {
@@ -79,6 +93,10 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
     : UNKNOWN;
 
   const basis = titleCase(report.basis || UNKNOWN);
+
+  const friskSearch = report.fcInvolvedFriskOrSearch
+    ? friskMapping[report.fcInvolvedFriskOrSearch]
+    : UNKNOWN;
   // const contactTime =
   //   moment(report.contactDate).tz("EST").format("MMM. D YYYY @ hh:mm A") +
   //   " (WRONG)";
@@ -90,15 +108,19 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
           <Grid item>
             <Grid container spacing={1}>
               <Grid item>
-                <EmojiChip
-                  emoji={"🚓"}
-                  label={officerName}
+                <LabelledChip
+                  label="officer"
+                  value={officerName}
                   onClick={() => alert(report.contactOfficerName)}
                 />
               </Grid>
               <Grid item>
-                <EmojiChip emoji={"❓"} label={basis} />
+                <LabelledChip label="basis" value={basis} />
               </Grid>
+              <Grid item>
+                <LabelledChip label="frisked" value={friskSearch} />
+              </Grid>
+              <Grid item xs={12} />
               {report.people.map((person, i) => {
                 const race = person.race || UNKNOWN;
                 const gender = person.sex || UNKNOWN;
@@ -108,7 +130,7 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
                     : titleCase(`${race} ${gender}`);
                 return (
                   <Grid key={i} item>
-                    <EmojiChip emoji={"👤"} label={profile} />
+                    <LabelledChip avatar={<Person />} value={profile} />
                   </Grid>
                 );
               })}

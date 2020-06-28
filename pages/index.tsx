@@ -4,26 +4,37 @@ import axios from "axios";
 import {
   Grid,
   TextField,
-  Fade,
   IconButton,
   Typography,
+  Divider,
+  Box,
 } from "@material-ui/core";
-import { FieldContact } from "interfaces";
-import { SearchResults } from "flexsearch";
+import {
+  FieldContact,
+  FCSearchResult,
+  FCSearchResultSummary,
+} from "interfaces";
 import { useForm } from "react-hook-form";
-import ReportSummaryCard from "components/ReportSummaryCard";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
+import SearchResultsList from "components/SearchResultsList";
+import SearchResultsSummary from "components/SearchResultsSummary";
+
+const PAGE_LIMIT = 25;
+const SEARCH_BOX = "search-box";
+const SCROLL_LOAD_THRESHOLD = 1000;
 
 const searchReports = (query: string, page?: string) => {
+  const q = {
+    query: query.trim(),
+    page: page || true,
+    limit: PAGE_LIMIT,
+  };
   return axios
-    .get<SearchResults<FieldContact>>("/api/reports/search", {
-      params: { q: query.trim(), page },
+    .get<FCSearchResult>("/api/reports/search", {
+      params: { q },
     })
     .then(({ data }) => data);
 };
-
-const SEARCH_BOX = "search-box";
-const SCROLL_LOAD_THRESHOLD = 1000;
 
 const Reports: React.FC = () => {
   const { handleSubmit, register } = useForm();
@@ -31,6 +42,9 @@ const Reports: React.FC = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [nextPage, setNextPage] = React.useState<string | undefined>();
   const [reports, setReports] = React.useState<FieldContact[] | undefined>();
+  const [summary, setSummary] = React.useState<
+    FCSearchResultSummary | undefined
+  >();
 
   React.useEffect(() => {
     // Warm up the serverless endpoint (random string to force a cache miss)
@@ -42,10 +56,12 @@ const Reports: React.FC = () => {
     setQuery(q);
     setReports(undefined);
     setLoading(true);
-    searchReports(q).then(({ result, next }) => {
+    setSummary(undefined);
+    searchReports(q).then(({ results: { result, next }, summary }) => {
       setReports(result);
       setNextPage(next);
       setLoading(false);
+      setSummary(summary);
     });
     // Clear searchbox focus
     // @ts-ignore
@@ -63,7 +79,7 @@ const Reports: React.FC = () => {
 
     if (isAtThreshold && nextPage && reports && query && !loading) {
       setLoading(true);
-      searchReports(query, nextPage).then(({ result, next }) => {
+      searchReports(query, nextPage).then(({ results: { result, next } }) => {
         setReports([...reports, ...result]);
         setNextPage(next);
         setLoading(false);
@@ -98,27 +114,35 @@ const Reports: React.FC = () => {
             />
           </form>
         </Grid>
-        {reports?.map((report) => (
-          <Grid item key={report.fcNum}>
-            <Fade in={true} timeout={300}>
-              <ReportSummaryCard report={report} searchTerm={query} />
-            </Fade>
-          </Grid>
-        ))}
-        {!!query && (
+        {query && reports && summary && summary.total > 0 && (
+          <>
+            <Grid item>
+              <Box m={1}>
+                <Typography variant="overline">Summary</Typography>
+                <Divider />
+                <SearchResultsSummary summary={summary} searchTerm={query} />
+              </Box>
+            </Grid>
+            <Grid item>
+              <Box m={1}>
+                <Typography variant="overline">Reports</Typography>
+                <Divider />
+                <Box marginTop={1}>
+                  <SearchResultsList results={reports} searchTerm={query} />
+                </Box>
+              </Box>
+            </Grid>
+          </>
+        )}
+        {query && (
           <Grid item>
-            <Grid container justify="center">
+            <Box textAlign="center">
               <Typography variant="subtitle2" color="textSecondary">
                 {loading
                   ? "loading..."
-                  : !nextPage &&
-                    (reports?.length
-                      ? `showing ${reports.length} result${
-                          reports.length > 1 ? "s" : ""
-                        } for "${query}"`
-                      : `no results for "${query}"`)}
+                  : !reports?.length && `no results for "${query}"`}
               </Typography>
-            </Grid>
+            </Box>
           </Grid>
         )}
       </Grid>
