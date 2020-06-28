@@ -4,17 +4,18 @@ import axios from "axios";
 import {
   Grid,
   TextField,
-  Fade,
   IconButton,
   Typography,
   Divider,
   Box,
 } from "@material-ui/core";
-import { FieldContact } from "interfaces";
+import {
+  FieldContact,
+  FCSearchResult,
+  FCSearchResultSummary,
+} from "interfaces";
 import { useForm } from "react-hook-form";
-import ReportSummaryCard from "components/ReportSummaryCard";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import { FCSearchResult } from "./api/reports/search";
 import SearchResultsList from "components/SearchResultsList";
 import SearchResultsSummary from "components/SearchResultsSummary";
 

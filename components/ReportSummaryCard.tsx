@@ -9,7 +9,7 @@ import {
   ChipProps,
   makeStyles,
 } from "@material-ui/core";
-import { LabelImportant, Person } from "@material-ui/icons";
+import { Person } from "@material-ui/icons";
 // import moment from "moment-timezone";
 
 const UNKNOWN = "N/A";
