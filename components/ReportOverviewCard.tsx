@@ -71,12 +71,12 @@ const friskMapping = {
   n: "No",
 };
 
-export interface ReportSummaryCardProps {
+export interface ReportOverviewCardProps {
   report: FieldContact;
   searchTerm: string;
 }
 
-const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
+const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
   report,
   searchTerm,
 }) => {
@@ -158,4 +158,4 @@ const ReportSummaryCard: React.FC<ReportSummaryCardProps> = ({
   );
 };
 
-export default ReportSummaryCard;
+export default ReportOverviewCard;

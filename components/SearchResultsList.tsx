@@ -1,7 +1,7 @@
 import React from "react";
 import { FieldContact } from "interfaces";
 import { Grid, Fade } from "@material-ui/core";
-import ReportSummaryCard from "./ReportSummaryCard";
+import ReportOverviewCard from "./ReportOverviewCard";
 
 export interface SearchResultsListProps {
   results: FieldContact[];
@@ -17,7 +17,7 @@ const SearchResultsList: React.FC<SearchResultsListProps> = ({
       {results?.map((report) => (
         <Grid item key={report.fcNum}>
           <Fade in={true} timeout={300}>
-            <ReportSummaryCard report={report} searchTerm={searchTerm} />
+            <ReportOverviewCard report={report} searchTerm={searchTerm} />
           </Fade>
         </Grid>
       ))}

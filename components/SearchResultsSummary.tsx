@@ -16,8 +16,10 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
     return null;
   }
 
-  const getPercent = (n: number, total: number) =>
-    `${Math.round((n / total) * 100)}%`;
+  const getPercent = (n: number, total: number) => {
+    const percent = Math.round((n / total) * 100);
+    return percent < 1 ? `<1%` : `${percent}%`;
+  };
   const getTextualHistogram = (hist: Dictionary<number>, total: number) =>
     map(hist, (count, key) => `${getPercent(count, total)} ${key}.`).join(" ");
 
