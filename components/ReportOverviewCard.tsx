@@ -12,6 +12,7 @@ import {
 import { Person } from "@material-ui/icons";
 import zipToNeighborhood from "data/zip-to-neighborhood.json";
 import theme from "style/theme";
+import { Dictionary } from "lodash";
 // import moment from "moment-timezone";
 
 const UNKNOWN = "(not provided)";
@@ -101,7 +102,7 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
     : UNKNOWN;
 
   const area = report.zip
-    ? zipToNeighborhood[report.zip] || "Boston"
+    ? (zipToNeighborhood as Dictionary<string>)[report.zip] || "Boston"
     : "Boston";
   // const contactTime =
   //   moment(report.contactDate).tz("EST").format("MMM. D YYYY @ hh:mm A") +

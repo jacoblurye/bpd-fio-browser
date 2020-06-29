@@ -38,7 +38,7 @@ const searchReports = (query: string, page?: string) => {
 };
 
 const Reports: React.FC = () => {
-  const { handleSubmit, register, reset } = useForm();
+  const { handleSubmit, register } = useForm();
   const [query, setQuery] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [nextPage, setNextPage] = React.useState<string | undefined>();
