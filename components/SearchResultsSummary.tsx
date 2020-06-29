@@ -70,7 +70,7 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
         <Grid item xs={12} sm={12} md={6}>
           <Grid container justify="center">
             <Grid item>
-              <Box height={400} width={[450]}>
+              <Box height={400} width={[350, 450, 450, 450]}>
                 <ZipcodeMap zipCounts={summary.totalByZip} />
               </Box>
             </Grid>
