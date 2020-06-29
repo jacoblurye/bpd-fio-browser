@@ -3,6 +3,7 @@ import { Dictionary, max } from "lodash";
 import { Map, TileLayer, GeoJSON } from "react-leaflet";
 import zipcodeGeoJSON from "data/boston-zipcodes.json";
 import { geoJSON } from "leaflet";
+import theme from "style/theme";
 
 // @ts-ignore
 const mapBounds = geoJSON(zipcodeGeoJSON).getBounds();
@@ -41,7 +42,11 @@ const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
   return (
     <Map
       bounds={mapBounds}
-      style={{ height: "100%", width: "100%" }}
+      style={{
+        height: "100%",
+        width: "100%",
+        borderRadius: theme.shape.borderRadius,
+      }}
       {...disableInteractions}
     >
       <TileLayer
