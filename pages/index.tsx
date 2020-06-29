@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import SearchResultsList from "components/SearchResultsList";
 import SearchResultsSummary from "components/SearchResultsSummary";
+import { Search } from "@material-ui/icons";
 
 const PAGE_LIMIT = 25;
 const SEARCH_BOX = "search-box";
@@ -37,7 +38,7 @@ const searchReports = (query: string, page?: string) => {
 };
 
 const Reports: React.FC = () => {
-  const { handleSubmit, register } = useForm();
+  const { handleSubmit, register, reset } = useForm();
   const [query, setQuery] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [nextPage, setNextPage] = React.useState<string | undefined>();
@@ -105,7 +106,7 @@ const Reports: React.FC = () => {
                     style={{ background: "none" }}
                     onClick={handleSearch}
                   >
-                    🔍
+                    <Search />
                   </IconButton>
                 ),
               }}
