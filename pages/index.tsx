@@ -98,7 +98,7 @@ const Reports: React.FC = () => {
               fullWidth
               autoFocus
               variant="outlined"
-              placeholder="Search 35,000 BPD field contact records"
+              placeholder="Search 35,000 police records"
               InputProps={{
                 endAdornment: (
                   <IconButton

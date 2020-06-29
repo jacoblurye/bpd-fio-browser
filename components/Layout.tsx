@@ -9,7 +9,7 @@ type Props = {
 const Layout = ({ title, children }: Props) => {
   return (
     <ScrollToTop>
-      <div style={{ maxWidth: 800, margin: "auto" }}>
+      <div style={{ maxWidth: 960, margin: "auto" }}>
         <Head>
           <title>{title}</title>
           <meta charSet="utf-8" />

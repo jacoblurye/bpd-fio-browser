@@ -1,7 +1,12 @@
 import React from "react";
+import dynamic from "next/dynamic";
 import { FCSearchResultSummary } from "interfaces";
 import { Grid, Typography, Box } from "@material-ui/core";
 import { map, Dictionary, sum } from "lodash";
+
+const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
+  ssr: false,
+});
 
 export interface SearchResultsSummaryProps {
   summary: FCSearchResultSummary;
@@ -38,24 +43,38 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
 
   return (
     <Box m={1}>
-      <Grid container direction="column" spacing={1}>
-        <Grid item>
-          <Typography>
-            Found {summary.total} field contact{summary.total !== 1 ? "s" : ""}{" "}
-            with "{searchTerm}" in the description.
-          </Typography>
+      <Grid container justify="space-between">
+        <Grid item xs={12} sm={12} md={6}>
+          <Grid container direction="column" spacing={1}>
+            <Grid item>
+              <Typography>
+                Found {summary.total} field contact
+                {summary.total !== 1 ? "s" : ""} with "{searchTerm}" in the
+                description.
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography>{friskPercent} involved a frisk search.</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>{basisPercents}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>{racePercents}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>{genderPercents}</Typography>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Typography>{friskPercent} involved a frisk search.</Typography>
-        </Grid>
-        <Grid item>
-          <Typography>{basisPercents}</Typography>
-        </Grid>
-        <Grid item>
-          <Typography>{racePercents}</Typography>
-        </Grid>
-        <Grid item>
-          <Typography>{genderPercents}</Typography>
+        <Grid item xs={12} sm={12} md={6}>
+          <Grid container justify="center">
+            <Grid item>
+              <Box height={400} width={[450]}>
+                <ZipcodeMap zipCounts={summary.totalByZip} />
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Box>
