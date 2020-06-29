@@ -10,9 +10,11 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
+import zipToNeighborhood from "data/zip-to-neighborhood.json";
+import theme from "style/theme";
 // import moment from "moment-timezone";
 
-const UNKNOWN = "N/A";
+const UNKNOWN = "(not provided)";
 
 const titleCase = (str: string) => {
   return str
@@ -28,9 +30,9 @@ const useStyles = makeStyles({
   },
   inlineSearchText: {
     display: "inline",
-    border: "1px dashed black",
+    background: theme.palette.success.light,
     borderRadius: 5,
-    padding: 1,
+    padding: 3,
   },
 });
 
@@ -97,6 +99,10 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
   const friskSearch = report.fcInvolvedFriskOrSearch
     ? friskMapping[report.fcInvolvedFriskOrSearch]
     : UNKNOWN;
+
+  const area = report.zip
+    ? zipToNeighborhood[report.zip] || "Boston"
+    : "Boston";
   // const contactTime =
   //   moment(report.contactDate).tz("EST").format("MMM. D YYYY @ hh:mm A") +
   //   " (WRONG)";
@@ -119,6 +125,9 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
               </Grid>
               <Grid item>
                 <LabelledChip label="frisked" value={friskSearch} />
+              </Grid>
+              <Grid item>
+                <LabelledChip label="area" value={area} />
               </Grid>
               <Grid item xs={12} />
               {report.people.map((person, i) => {
