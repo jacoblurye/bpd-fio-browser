@@ -52,20 +52,16 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
         <Grid item xs={12} sm={12} md={6}>
           <Grid container direction="column" spacing={1}>
             <Grid item>
-              <Typography>
+              <Typography variant="h6">
                 Found {summary.total} field contact
                 {summary.total !== 1 ? "s" : ""} with "{searchTerm}" in the
                 description.
               </Typography>
             </Grid>
             <Grid item>
-              <Typography>{friskPercent} involved a frisk search.</Typography>
-            </Grid>
-            <Grid item>
-              <StatsGroup title="basis" data={basisPercents} />
-            </Grid>
-            <Grid item>
-              <Divider />
+              <Typography variant="h6">
+                {friskPercent} involved a frisk search.
+              </Typography>
             </Grid>
             <Grid item>
               <StatsGroup title="race" data={racePercents} />
@@ -75,6 +71,12 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
             </Grid>
             <Grid item>
               <StatsGroup title="gender" data={genderPercents} />
+            </Grid>
+            <Grid item>
+              <Divider />
+            </Grid>
+            <Grid item>
+              <StatsGroup title="basis" data={basisPercents} />
             </Grid>
             <Hidden mdUp>
               <Grid item>
