@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import Head from "next/head";
 import ScrollToTop from "./ScrollToTop";
+import { Box } from "@material-ui/core";
 type Props = {
   children?: ReactNode;
   title?: string;
@@ -9,7 +10,7 @@ type Props = {
 const Layout = ({ title, children }: Props) => {
   return (
     <ScrollToTop>
-      <div style={{ maxWidth: 960, margin: "auto" }}>
+      <Box m="auto" maxWidth={960}>
         <Head>
           <title>{title}</title>
           <meta charSet="utf-8" />
@@ -19,7 +20,7 @@ const Layout = ({ title, children }: Props) => {
           />
         </Head>
         {children}
-      </div>
+      </Box>
     </ScrollToTop>
   );
 };

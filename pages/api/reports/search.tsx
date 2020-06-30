@@ -43,12 +43,23 @@ const getQueryResult = async (
   return index.search(query) as SearchResults<FieldContact>;
 };
 
+const countByWithoutNull = (...args: Parameters<typeof countBy>) => {
+  let counts = countBy(...args);
+  // @ts-ignore
+  if (counts["null"]) {
+    counts.unknown = (counts.unknown || 0) + counts["null"];
+    delete counts["null"];
+  }
+  return counts;
+};
+
 const countByPersonField = (
   fcs: FieldContact[],
   field: keyof Person
 ): Dictionary<number> => {
   return fcs.reduce((overallCounts, fc) => {
-    const personCounts = countBy(fc.people, field);
+    let personCounts = countByWithoutNull(fc.people, field);
+
     return addObjectValues(overallCounts, personCounts);
   }, {});
 };
@@ -66,11 +77,14 @@ const getQuerySummary = async (
   // @ts-ignore
   const result: FieldContact[] = index.search(queryWithoutLimits);
   const total = result.length;
-  const totalWithFrisk = countBy(result, "fcInvolvedFriskOrSearch")["y"];
-  const totalByZip = countBy(result, "zip");
-  const totalByBasis = countBy(result, "basis");
+  const { y: totalWithFrisk } = countByWithoutNull(
+    result,
+    "fcInvolvedFriskOrSearch"
+  );
+  const totalByZip = countByWithoutNull(result, "zip");
+  const totalByBasis = countByWithoutNull(result, "basis");
   const totalByRace = countByPersonField(result, "race");
-  const totalByGender = countByPersonField(result, "sex");
+  const totalByGender = countByPersonField(result, "gender");
   const summary = {
     total,
     totalWithFrisk,

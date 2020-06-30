@@ -133,9 +133,9 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
               <Grid item xs={12} />
               {report.people.map((person, i) => {
                 const race = person.race || UNKNOWN;
-                const gender = person.sex || UNKNOWN;
+                const gender = person.gender || UNKNOWN;
                 const profile =
-                  !person.race && !person.sex
+                  !person.race && !person.gender
                     ? UNKNOWN
                     : titleCase(`${race} ${gender}`);
                 return (

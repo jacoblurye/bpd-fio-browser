@@ -1,8 +1,9 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { FCSearchResultSummary } from "interfaces";
-import { Grid, Typography, Box } from "@material-ui/core";
-import { map, Dictionary, sum } from "lodash";
+import { Grid, Typography, Box, Divider, Hidden } from "@material-ui/core";
+import { Dictionary, sum, mapValues } from "lodash";
+import StatsGroup from "./StatsGroup";
 
 const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
   ssr: false,
@@ -25,25 +26,29 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
     const percent = Math.round((n / total) * 100);
     return percent < 1 ? `<1%` : `${percent}%`;
   };
-  const getTextualHistogram = (hist: Dictionary<number>, total: number) =>
-    map(hist, (count, key) => `${getPercent(count, total)} ${key}.`).join(" ");
+  const getPercents = (dist: Dictionary<number>, total: number) => {
+    const sortedLabels = Object.keys(dist).sort(
+      (label1, label2) => dist[label2] - dist[label1]
+    );
+
+    const sortedDist = sortedLabels.reduce(
+      (prev, l) => ({ ...prev, [l]: dist[l] }),
+      {}
+    );
+
+    return mapValues(sortedDist, (v) => getPercent(v, total));
+  };
 
   const totalPeople = sum(Object.values(summary.totalByRace));
 
   const friskPercent = getPercent(summary.totalWithFrisk, summary.total);
-  const basisPercents = getTextualHistogram(
-    summary.totalByBasis,
-    summary.total
-  );
-  const racePercents = getTextualHistogram(summary.totalByRace, totalPeople);
-  const genderPercents = getTextualHistogram(
-    summary.totalByGender,
-    totalPeople
-  );
+  const basisPercents = getPercents(summary.totalByBasis, summary.total);
+  const racePercents = getPercents(summary.totalByRace, totalPeople);
+  const genderPercents = getPercents(summary.totalByGender, totalPeople);
 
   return (
     <Box m={1}>
-      <Grid container justify="space-between">
+      <Grid container justify="space-between" spacing={1}>
         <Grid item xs={12} sm={12} md={6}>
           <Grid container direction="column" spacing={1}>
             <Grid item>
@@ -57,14 +62,26 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
               <Typography>{friskPercent} involved a frisk search.</Typography>
             </Grid>
             <Grid item>
-              <Typography>{basisPercents}</Typography>
+              <StatsGroup title="basis" data={basisPercents} />
             </Grid>
             <Grid item>
-              <Typography>{racePercents}</Typography>
+              <Divider />
             </Grid>
             <Grid item>
-              <Typography>{genderPercents}</Typography>
+              <StatsGroup title="race" data={racePercents} />
             </Grid>
+            <Grid item>
+              <Divider />
+            </Grid>
+            <Grid item>
+              <StatsGroup title="gender" data={genderPercents} />
+            </Grid>
+            <Hidden mdUp>
+              <Grid item>
+                <Divider />
+              </Grid>
+              <Grid item />
+            </Hidden>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={12} md={6}>

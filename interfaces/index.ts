@@ -43,7 +43,7 @@ export type Person = {
   ethnicity: "not of hispanic origin" | "hispanic origin" | "unknown" | null;
   skinTone: string | null;
   age: number | null;
-  sex: string | null;
+  gender: string | null;
   build: string | null;
   hairStyle: string | null;
   otherclothing: string | null;
