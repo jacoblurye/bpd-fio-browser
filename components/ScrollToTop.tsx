@@ -16,7 +16,7 @@ const ScrollToTop: React.FC = ({ children }) => {
     <Grid
       container
       justify="center"
-      style={{ position: "fixed", top: 5, width: "100%" }}
+      style={{ position: "fixed", top: 5, width: "100%", zIndex: 999999 }}
     >
       <Grid item>
         <Tooltip title="scroll to top">
