@@ -87,7 +87,7 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
 
   const lowerCaseSearchTerm = searchTerm.toLowerCase();
   const narrativeChunks = report.narrative
-    ? report.narrative.split(lowerCaseSearchTerm)
+    ? report.narrative.split(` ${lowerCaseSearchTerm} `)
     : [];
   const lastChunk = narrativeChunks.length - 1;
 
@@ -154,9 +154,12 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
                     {chunk}
                   </Typography>
                   {i !== lastChunk && (
-                    <Typography className={classes.inlineSearchText}>
-                      {searchTerm}
-                    </Typography>
+                    <>
+                      {" "}
+                      <Typography className={classes.inlineSearchText}>
+                        {searchTerm}
+                      </Typography>{" "}
+                    </>
                   )}
                 </React.Fragment>
               );
