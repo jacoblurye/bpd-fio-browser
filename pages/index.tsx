@@ -19,6 +19,7 @@ import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import SearchResultsList from "components/SearchResultsList";
 import SearchResultsSummary from "components/SearchResultsSummary";
 import { Search } from "@material-ui/icons";
+import { useRouter } from "next/dist/client/router";
 
 const PAGE_LIMIT = 25;
 const SEARCH_BOX = "search-box";
@@ -38,7 +39,12 @@ const searchReports = (query: string, page?: string) => {
 };
 
 const Reports: React.FC = () => {
-  const { handleSubmit, register } = useForm();
+  React.useEffect(() => {
+    // Warm up the serverless endpoint (random string to force a cache miss)
+    searchReports(Math.random().toString());
+  }, []);
+
+  const { handleSubmit, register, setValue, getValues } = useForm();
   const [query, setQuery] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [nextPage, setNextPage] = React.useState<string | undefined>();
@@ -47,14 +53,12 @@ const Reports: React.FC = () => {
     FCSearchResultSummary | undefined
   >();
 
-  React.useEffect(() => {
-    // Warm up the serverless endpoint (random string to force a cache miss)
-    searchReports(Math.random().toString());
-  }, []);
+  const router = useRouter();
 
   // Execute a search query based on the search box contents
   const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
     setQuery(q);
+    router.push({ pathname: router.pathname, query: { q } });
     setReports(undefined);
     setLoading(true);
     setSummary(undefined);
@@ -68,6 +72,15 @@ const Reports: React.FC = () => {
     // @ts-ignore
     document.activeElement?.blur();
   });
+
+  React.useEffect(() => {
+    // Sync the searchbox value with the `q` query param
+    const q = router.query.q as string;
+    if (q && q !== getValues()[SEARCH_BOX]) {
+      setValue(SEARCH_BOX, q);
+      handleSearch();
+    }
+  }, [router]);
 
   // Load the next page of query results if the user nears the bottom of the page
   useScrollPosition(({ currPos }) => {
