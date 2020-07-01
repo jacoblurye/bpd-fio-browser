@@ -4,9 +4,6 @@ const theme = createMuiTheme({
   shape: {
     borderRadius: 5,
   },
-  typography: {
-    fontFamily: "Helvetica Neue",
-  },
   props: {
     MuiButtonBase: {
       disableRipple: true,

@@ -47,7 +47,7 @@ const SearchResultsSummary: React.FC<SearchResultsSummaryProps> = ({
   const genderPercents = getPercents(summary.totalByGender, totalPeople);
 
   return (
-    <Box m={1}>
+    <Box marginY={1}>
       <Grid container justify="space-between" spacing={1}>
         <Grid item xs={12} sm={12} md={6}>
           <Grid container direction="column" spacing={1}>
