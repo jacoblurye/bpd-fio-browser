@@ -68,6 +68,7 @@ export interface FCSearchResultSummary {
   totalByRace: Dictionary<number>;
   totalByGender: Dictionary<number>;
   totalByBasis: Dictionary<number>;
+  totalByAge: Dictionary<number>;
 }
 
 export interface FCSearchResult {

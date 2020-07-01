@@ -134,10 +134,11 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
               {report.people.map((person, i) => {
                 const race = person.race || UNKNOWN;
                 const gender = person.gender || UNKNOWN;
+                const age = person.age || UNKNOWN;
                 const profile =
                   !person.race && !person.gender
                     ? UNKNOWN
-                    : titleCase(`${race} ${gender}`);
+                    : titleCase(`${race} ${gender} | ${age}`);
                 return (
                   <Grid key={i} item>
                     <LabelledChip avatar={<Person />} value={profile} />

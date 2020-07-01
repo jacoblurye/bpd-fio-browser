@@ -85,6 +85,7 @@ const getQuerySummary = async (
   const totalByBasis = countByWithoutNull(result, "basis");
   const totalByRace = countByPersonField(result, "race");
   const totalByGender = countByPersonField(result, "gender");
+  const totalByAge = countByPersonField(result, "age");
   const summary = {
     total,
     totalWithFrisk,
@@ -92,6 +93,7 @@ const getQuerySummary = async (
     totalByRace,
     totalByGender,
     totalByBasis,
+    totalByAge,
   };
 
   // Add summary to the cache
