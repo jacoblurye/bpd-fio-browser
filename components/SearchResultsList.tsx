@@ -1,6 +1,6 @@
 import React from "react";
 import { FieldContact } from "interfaces";
-import { Grid, Fade } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import ReportOverviewCard from "./ReportOverviewCard";
 
 export interface SearchResultsListProps {
@@ -16,9 +16,7 @@ const SearchResultsList: React.FC<SearchResultsListProps> = ({
     <Grid container direction="column" spacing={1}>
       {results?.map((report) => (
         <Grid item key={report.fcNum}>
-          <Fade in={true} timeout={300}>
-            <ReportOverviewCard report={report} searchTerm={searchTerm} />
-          </Fade>
+          <ReportOverviewCard report={report} searchTerm={searchTerm} />
         </Grid>
       ))}
     </Grid>
