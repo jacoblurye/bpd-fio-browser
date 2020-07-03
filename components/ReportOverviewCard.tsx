@@ -10,7 +10,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
-import zipToNeighborhood from "data/zip-to-neighborhood.json";
+import zipToNeighborhood from "json/zip-to-neighborhood.json";
 import theme from "style/theme";
 import { Dictionary } from "lodash";
 // import moment from "moment-timezone";

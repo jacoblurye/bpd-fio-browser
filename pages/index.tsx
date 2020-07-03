@@ -1,6 +1,5 @@
 import React from "react";
 import Layout from "components/Layout";
-import axios from "axios";
 import {
   Grid,
   TextField,
@@ -9,65 +8,49 @@ import {
   Divider,
   Box,
 } from "@material-ui/core";
-import {
-  FieldContact,
-  FCSearchResult,
-  FCSearchResultSummary,
-} from "interfaces";
 import { useForm } from "react-hook-form";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import SearchResultsList from "components/SearchResultsList";
 import SearchResultsSummary from "components/SearchResultsSummary";
 import { Search } from "@material-ui/icons";
 import { useRouter } from "next/dist/client/router";
+import {
+  useRecoilState,
+  useSetRecoilState,
+  useRecoilValueLoadable,
+} from "recoil";
+import { searchQuery, searchPage, searchSummary, searchReports } from "state";
+import { FieldContact } from "interfaces";
 
-const PAGE_LIMIT = 25;
 const SEARCH_BOX = "search-box";
 const SCROLL_LOAD_THRESHOLD = 1000;
 
-const searchReports = (query: string, page?: string) => {
-  const q = {
-    query: query.trim(),
-    page: page || true,
-    limit: PAGE_LIMIT,
-  };
-  return axios
-    .get<FCSearchResult>("/api/reports/search", {
-      params: { q },
-    })
-    .then(({ data }) => data);
-};
-
 const Reports: React.FC = () => {
-  React.useEffect(() => {
-    // Warm up the serverless endpoint (random string to force a cache miss)
-    searchReports(Math.random().toString());
-  }, []);
-
-  const { handleSubmit, register, setValue, getValues } = useForm();
-  const [query, setQuery] = React.useState<string>("");
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [nextPage, setNextPage] = React.useState<string | undefined>();
-  const [reports, setReports] = React.useState<FieldContact[] | undefined>();
-  const [summary, setSummary] = React.useState<
-    FCSearchResultSummary | undefined
-  >();
-
   const router = useRouter();
+  const { handleSubmit, register, setValue, getValues } = useForm();
+
+  const [query, setQuery] = useRecoilState(searchQuery);
+  const setPage = useSetRecoilState(searchPage);
+  const summaryLoadable = useRecoilValueLoadable(searchSummary);
+  const summary =
+    summaryLoadable.state === "hasValue" && summaryLoadable.contents;
+  const reportsLoadable = useRecoilValueLoadable(searchReports);
+  const reports =
+    reportsLoadable.state === "hasValue" && reportsLoadable.contents;
+
+  const [loadedReports, setLoadedReports] = React.useState<FieldContact[]>([]);
+  const allReports =
+    reports && reports.result.length > 0
+      ? [...loadedReports, ...reports.result]
+      : loadedReports;
 
   // Execute a search query based on the search box contents
   const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
     setQuery(q);
-    router.push({ pathname: router.pathname, query: { q } });
-    setReports(undefined);
-    setLoading(true);
-    setSummary(undefined);
-    searchReports(q).then(({ results: { result, next }, summary }) => {
-      setReports(result);
-      setNextPage(next);
-      setLoading(false);
-      setSummary(summary);
-    });
+    setPage(true);
+    setLoadedReports([]);
+    const query = q ? { q } : undefined;
+    router.push({ pathname: router.pathname, query });
     // Clear searchbox focus
     // @ts-ignore
     document.activeElement?.blur();
@@ -91,13 +74,11 @@ const Reports: React.FC = () => {
 
     const isAtThreshold = -currPos.y > thresholdScrollPos;
 
-    if (isAtThreshold && nextPage && reports && query && !loading) {
-      setLoading(true);
-      searchReports(query, nextPage).then(({ results: { result, next } }) => {
-        setReports([...reports, ...result]);
-        setNextPage(next);
-        setLoading(false);
-      });
+    if (isAtThreshold && reports) {
+      if (reports.next) {
+        setPage(reports.next);
+        setLoadedReports(allReports);
+      }
     }
   });
 
@@ -128,33 +109,34 @@ const Reports: React.FC = () => {
             />
           </form>
         </Grid>
-        {query && reports && summary && summary.total > 0 && (
-          <>
-            <Grid item>
-              <Box m={1}>
-                <Typography variant="overline">Summary</Typography>
-                <Divider />
-                <SearchResultsSummary summary={summary} searchTerm={query} />
+        {summary && summary.total > 0 && (
+          <Grid item>
+            <Box m={1}>
+              <Typography variant="overline">Summary</Typography>
+              <Divider />
+              <SearchResultsSummary summary={summary} searchTerm={query} />
+            </Box>
+          </Grid>
+        )}
+        {allReports.length > 0 && (
+          <Grid item>
+            <Box m={1}>
+              <Typography variant="overline">Reports</Typography>
+              <Box marginTop={1}>
+                <SearchResultsList results={allReports} searchTerm={query} />
               </Box>
-            </Grid>
-            <Grid item>
-              <Box m={1}>
-                <Typography variant="overline">Reports</Typography>
-                <Divider />
-                <Box marginTop={1}>
-                  <SearchResultsList results={reports} searchTerm={query} />
-                </Box>
-              </Box>
-            </Grid>
-          </>
+            </Box>
+          </Grid>
         )}
         {query && (
           <Grid item>
             <Box textAlign="center">
               <Typography variant="subtitle2" color="textSecondary">
-                {loading
+                {reportsLoadable.state === "loading"
                   ? "loading..."
-                  : !reports?.length && `no results for "${query}"`}
+                  : summary &&
+                    summary.total === 0 &&
+                    `no results for "${query}"`}
               </Typography>
             </Box>
           </Grid>

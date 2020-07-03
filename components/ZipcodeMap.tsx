@@ -1,7 +1,7 @@
 import React from "react";
 import { Dictionary, max } from "lodash";
 import { Map, TileLayer, GeoJSON } from "react-leaflet";
-import zipcodeGeoJSON from "data/boston-zipcodes.json";
+import zipcodeGeoJSON from "json/boston-zipcodes.json";
 import { geoJSON } from "leaflet";
 import theme from "style/theme";
 

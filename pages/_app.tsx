@@ -3,6 +3,7 @@ import { AppProps } from "next/app";
 import theme from "style/theme";
 import { MuiThemeProvider } from "@material-ui/core";
 import "leaflet/dist/leaflet.css";
+import { RecoilRoot } from "recoil";
 
 function App({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
@@ -15,7 +16,9 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <Component {...pageProps} />
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
     </MuiThemeProvider>
   );
 }
