@@ -4,11 +4,6 @@ const theme = createMuiTheme({
   shape: {
     borderRadius: 5,
   },
-  props: {
-    MuiButtonBase: {
-      disableRipple: true,
-    },
-  },
   overrides: {
     MuiCard: {
       root: {

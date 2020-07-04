@@ -10,7 +10,10 @@ import { ArrowUpward } from "@material-ui/icons";
 
 const ScrollToTop: React.FC = ({ children }) => {
   const topRef = React.useRef<HTMLDivElement>(null);
-  const showButton = useScrollTrigger({ disableHysteresis: true });
+  const showButton = useScrollTrigger({
+    threshold: 700,
+    disableHysteresis: true,
+  });
 
   const ScrollButton = () => (
     <Grid
@@ -36,8 +39,6 @@ const ScrollToTop: React.FC = ({ children }) => {
       </Grid>
     </Grid>
   );
-
-  console.log;
 
   return (
     <>

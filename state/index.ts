@@ -1,5 +1,12 @@
 import axios from "axios";
-import { atom, selector, selectorFamily } from "recoil";
+import {
+  atom,
+  selector,
+  selectorFamily,
+  useRecoilCallback,
+  useRecoilValue,
+  useRecoilValueLoadable,
+} from "recoil";
 import {
   FCSearchResult,
   FieldContact,
@@ -7,14 +14,31 @@ import {
 } from "interfaces";
 import { SearchResults } from "flexsearch";
 
-export const searchQuery = atom<string>({
-  key: "searchQuery",
-  default: "",
-});
-
 export const searchPage = atom<string | boolean>({
   key: "searchPage",
   default: true,
+});
+
+export const searchLoadedReports = atom<FieldContact[]>({
+  key: "searchLoadedReports",
+  default: [],
+});
+
+const searchQueryInternal = atom<string>({
+  key: "searchQueryInternal",
+  default: "",
+});
+
+export const searchQuery = selector<string>({
+  key: "searchQuery",
+  get: ({ get }) => get(searchQueryInternal),
+  set: ({ set }, query) => {
+    set(searchQueryInternal, query);
+
+    // Reset the search page and clear loaded reports
+    set(searchPage, true);
+    set(searchLoadedReports, []);
+  },
 });
 
 export const searchQueryResults = selectorFamily<
@@ -33,8 +57,10 @@ export const searchQueryResults = selectorFamily<
   },
 });
 
-export const searchReports = selector<SearchResults<FieldContact> | undefined>({
-  key: "searchResults",
+export const searchNewReports = selector<
+  SearchResults<FieldContact> | undefined
+>({
+  key: "searchNewReports",
   get: async ({ get }) => {
     const query = get(searchQuery);
     const page = get(searchPage);
@@ -59,3 +85,23 @@ export const searchSummary = selector<FCSearchResultSummary | undefined>({
     return undefined;
   },
 });
+
+export const useReports = () => {
+  const loadedReports = useRecoilValue(searchLoadedReports);
+  const newReports = useRecoilValueLoadable(searchNewReports);
+  return newReports.state === "hasValue" && newReports.contents
+    ? [...loadedReports, ...newReports.contents.result]
+    : loadedReports;
+};
+
+export const useLoadMoreReports = () =>
+  useRecoilCallback(({ snapshot, set }) => async () => {
+    const [loadedReports, newReports] = await Promise.all([
+      snapshot.getPromise(searchLoadedReports),
+      snapshot.getPromise(searchNewReports),
+    ]);
+    if (newReports?.result && newReports?.next) {
+      set(searchPage, newReports.next);
+      set(searchLoadedReports, [...loadedReports, ...newReports.result]);
+    }
+  });
