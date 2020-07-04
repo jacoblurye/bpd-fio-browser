@@ -5,7 +5,6 @@ import { Dictionary, sum, mapValues } from "lodash";
 import StatsGroup from "./StatsGroup";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { searchSummary, searchQuery } from "state";
-import { AccountBox } from "@material-ui/icons";
 
 const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
   ssr: false,

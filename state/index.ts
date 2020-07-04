@@ -102,6 +102,9 @@ export const useLoadMoreReports = () =>
     ]);
     if (newReports?.result && newReports?.next) {
       set(searchPage, newReports.next);
-      set(searchLoadedReports, [...loadedReports, ...newReports.result]);
+      set(searchLoadedReports, [
+        ...(loadedReports || []),
+        ...newReports.result,
+      ]);
     }
   });
