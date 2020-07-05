@@ -5,13 +5,13 @@ import {
   useLoadMoreReports,
   searchNewReports,
   useReports,
-  searchQuery,
   searchSummary,
+  searchFilter,
 } from "state";
 import { useRecoilValueLoadable, useRecoilValue } from "recoil";
 
 const ReportsList: React.FC = () => {
-  const query = useRecoilValue(searchQuery);
+  const query = useRecoilValue(searchFilter("narrative"));
   const summaryHasLoaded =
     useRecoilValueLoadable(searchSummary).state === "hasValue";
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);

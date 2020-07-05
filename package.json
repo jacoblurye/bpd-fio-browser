@@ -2,11 +2,11 @@
   "name": "with-typescript",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node scripts/build-fs-index.js && next",
-    "build": "node scripts/build-fs-index.js && next build",
+    "dev": "node scripts/data-preprocessing.js && next",
+    "build": "node scripts/data-preprocessing.js && next build",
     "start": "next start",
     "type-check": "tsc",
-    "build-index": "node scripts/build-fs-index.js"
+    "data-preprocessing": "node scripts/data-preprocessing.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.10.2",

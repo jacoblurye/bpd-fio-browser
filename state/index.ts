@@ -6,13 +6,16 @@ import {
   useRecoilCallback,
   useRecoilValue,
   useRecoilValueLoadable,
+  atomFamily,
 } from "recoil";
 import {
   FCSearchResult,
   FieldContact,
-  FCSearchResultSummary,
+  SearchResultSummary,
+  SearchField,
 } from "interfaces";
 import { SearchResults } from "flexsearch";
+import { flatMap } from "lodash";
 
 export const searchPage = atom<string | boolean>({
   key: "searchPage",
@@ -24,16 +27,26 @@ export const searchLoadedReports = atom<FieldContact[]>({
   default: [],
 });
 
-const searchQueryInternal = atom<string>({
-  key: "searchQueryInternal",
-  default: "",
+const _searchFilter = atomFamily<SearchField | undefined, SearchField["field"]>(
+  {
+    key: "_searchFilter",
+    default: undefined,
+  }
+);
+
+const _searchFilters = atom<SearchField[] | undefined>({
+  key: "_searchFilters",
+  default: undefined,
 });
 
-export const searchQuery = selector<string>({
-  key: "searchQuery",
-  get: ({ get }) => get(searchQueryInternal),
-  set: ({ set }, query) => {
-    set(searchQueryInternal, query);
+export const searchFilter = selectorFamily<
+  string | undefined,
+  SearchField["field"]
+>({
+  key: "searchFilter",
+  get: (field) => ({ get }) => get(_searchFilter(field))?.query,
+  set: (field) => ({ set }, query) => {
+    set(_searchFilter(field), query && { field, query, bool: "and" });
 
     // Reset the search page and clear loaded reports
     set(searchPage, true);
@@ -41,17 +54,37 @@ export const searchQuery = selector<string>({
   },
 });
 
-export const searchQueryResults = selectorFamily<
+export const searchFilters = selector<SearchField[] | undefined>({
+  key: "searchFilters",
+  get: ({ get }) => {
+    return flatMap(
+      ["narrative", "contactOfficerName", "zip"],
+      (field: SearchField["field"]) => {
+        const filter = get(_searchFilter(field));
+        return filter ? filter : [];
+      }
+    );
+  },
+});
+
+export const searchQuery = selectorFamily<
   FCSearchResult | undefined,
-  { query: string; page: string | boolean; limit: number }
+  { query: SearchField[]; page: string | boolean; limit: number }
 >({
-  key: "searchQueryResults",
+  key: "searchQuery",
   get: (q) => async () => {
     if (q.query) {
-      const { data } = await axios.get<FCSearchResult>("/api/reports/search", {
-        params: { q },
-      });
-      return data;
+      try {
+        const { data } = await axios.get<FCSearchResult>(
+          "/api/reports/search",
+          {
+            params: { q },
+          }
+        );
+        return data;
+      } catch (e) {
+        // TODO: catch this
+      }
     }
     return undefined;
   },
@@ -62,23 +95,23 @@ export const searchNewReports = selector<
 >({
   key: "searchNewReports",
   get: async ({ get }) => {
-    const query = get(searchQuery);
+    const filters = get(searchFilters);
     const page = get(searchPage);
-    if (query) {
-      return get(searchQueryResults({ query, page, limit: 25 }))?.results;
+    if (filters) {
+      return get(searchQuery({ query: filters, page, limit: 25 }))?.results;
     }
     return undefined;
   },
 });
 
-export const searchSummary = selector<FCSearchResultSummary | undefined>({
+export const searchSummary = selector<SearchResultSummary | undefined>({
   key: "searchResultsSummary",
   get: async ({ get }) => {
-    const query = get(searchQuery);
-    if (query) {
+    const filters = get(searchFilters);
+    if (filters) {
       // Summary is the same no matter the value of `page` or `limit`
       const searchResults = get(
-        searchQueryResults({ query, page: true, limit: 1 })
+        searchQuery({ query: filters, page: true, limit: 1 })
       );
       return searchResults?.summary;
     }

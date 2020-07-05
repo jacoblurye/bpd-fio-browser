@@ -1,31 +1,36 @@
 import React from "react";
-import { searchQuery } from "state";
-import { IconButton, TextField } from "@material-ui/core";
+import { searchFilter } from "state";
+import { IconButton, TextField, Box, Paper } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
-import { useForm } from "react-hook-form";
+import { useForm, FormContext, useFormContext } from "react-hook-form";
 import { useRouter } from "next/dist/client/router";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
+import FilterChip from "./FilterChip";
+import { isEmpty } from "lodash";
 
 const SEARCH_BOX = "search-box";
 
 const SearchBox: React.FC = () => {
   const router = useRouter();
-  const { handleSubmit, register, setValue, getValues } = useForm();
-  const setQuery = useSetRecoilState(searchQuery);
+  const formInstance = useForm();
+  const [query, setQuery] = useRecoilState(searchFilter("narrative"));
+
+  const [showSuggestions, setShowSuggestions] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     // Sync the searchbox value with the `q` query param
     const q = router.query.q as string;
-    if (q && q !== getValues()[SEARCH_BOX]) {
-      setValue(SEARCH_BOX, q);
+    if (q && q !== query) {
+      formInstance.setValue(SEARCH_BOX, q);
       handleSearch();
     }
   }, [router]);
 
   // Execute a search query based on the search box contents
-  const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
+  const handleSearch = formInstance.handleSubmit(({ [SEARCH_BOX]: q }) => {
     setQuery(q);
-    const query = q ? { q } : undefined;
+    formInstance.reset();
+    const query = isEmpty(q) ? undefined : { q };
     router.push({ pathname: router.pathname, query });
     // Clear searchbox focus
     // @ts-ignore
@@ -33,25 +38,73 @@ const SearchBox: React.FC = () => {
   });
 
   return (
-    <form onSubmit={handleSearch}>
-      <TextField
-        name={SEARCH_BOX}
-        inputRef={register}
-        fullWidth
-        autoFocus
-        variant="outlined"
-        placeholder="Search 35,000 police records"
-        InputProps={{
-          endAdornment: (
-            <IconButton style={{ background: "none" }} onClick={handleSearch}>
-              <Search />
-            </IconButton>
-          ),
-        }}
-        autoComplete="off"
-        autoCorrect="off"
-      />
-    </form>
+    <FormContext {...formInstance}>
+      <form onSubmit={handleSearch}>
+        <Box position="relative">
+          <Box>
+            <TextField
+              name={SEARCH_BOX}
+              inputRef={formInstance.register}
+              fullWidth
+              autoFocus
+              onChange={() => {
+                setShowSuggestions(true);
+              }}
+              onBlur={() => {
+                setShowSuggestions(false);
+              }}
+              variant="outlined"
+              placeholder="Search 35,000 police records"
+              InputProps={{
+                startAdornment: (
+                  <Box marginRight={1}>
+                    {query && (
+                      <FilterChip
+                        filterKey={"narrative"}
+                        label={"Report contains"}
+                        value={query}
+                        onDelete={() => setQuery(undefined)}
+                      />
+                    )}
+                  </Box>
+                ),
+                endAdornment: (
+                  <IconButton
+                    style={{ background: "none" }}
+                    onClick={handleSearch}
+                  >
+                    <Search />
+                  </IconButton>
+                ),
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+            />
+          </Box>
+          {showSuggestions && (
+            <Box width="100%" marginTop={1} position="absolute" zIndex={999999}>
+              <Suggestions />
+            </Box>
+          )}
+        </Box>
+      </form>
+    </FormContext>
+  );
+};
+
+const Suggestions: React.FC = () => {
+  const { watch } = useFormContext();
+  const searchValue = watch(SEARCH_BOX);
+  return (
+    <Paper elevation={3}>
+      <Box padding={2}>
+        <FilterChip
+          filterKey={"narrative"}
+          label={"Report contains"}
+          value={searchValue}
+        />
+      </Box>
+    </Paper>
   );
 };
 
