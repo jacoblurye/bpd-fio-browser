@@ -34,11 +34,6 @@ const _searchFilter = atomFamily<SearchField | undefined, SearchField["field"]>(
   }
 );
 
-const _searchFilters = atom<SearchField[] | undefined>({
-  key: "_searchFilters",
-  default: undefined,
-});
-
 export const searchFilter = selectorFamily<
   string | undefined,
   SearchField["field"]
@@ -46,7 +41,10 @@ export const searchFilter = selectorFamily<
   key: "searchFilter",
   get: (field) => ({ get }) => get(_searchFilter(field))?.query,
   set: (field) => ({ set }, query) => {
-    set(_searchFilter(field), query && { field, query, bool: "and" });
+    set(
+      _searchFilter(field),
+      query ? { field, query: query as string, bool: "and" } : undefined
+    );
 
     // Reset the search page and clear loaded reports
     set(searchPage, true);
