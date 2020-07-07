@@ -1,6 +1,5 @@
 import React from "react";
 import { Chip, Typography, Grid, ChipProps } from "@material-ui/core";
-import { useRecoilState } from "recoil";
 import { searchFilter } from "state";
 import { SearchField } from "interfaces";
 import { useSetRecoilState } from "recoil";

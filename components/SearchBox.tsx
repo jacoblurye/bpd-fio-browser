@@ -4,7 +4,7 @@ import { IconButton, TextField, Box, Paper, Grid } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { useForm, FormContext, useFormContext } from "react-hook-form";
 import { useRouter } from "next/dist/client/router";
-import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import FilterChip from "./FilterChip";
 import { isEmpty } from "lodash";
 import getSuggestions from "utils/get-suggestions";

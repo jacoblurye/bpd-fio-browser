@@ -3,15 +3,14 @@ import dynamic from "next/dynamic";
 import { Grid, Typography, Box, Divider, Hidden } from "@material-ui/core";
 import { Dictionary, sum, mapValues } from "lodash";
 import StatsGroup from "./StatsGroup";
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { searchSummary, searchFilter } from "state";
+import { useRecoilValueLoadable } from "recoil";
+import { searchSummary } from "state";
 
 const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
   ssr: false,
 });
 
 const ResultsSummary: React.FC = () => {
-  const searchTerm = useRecoilValue(searchFilter("narrative"));
   const summaryLoadable = useRecoilValueLoadable(searchSummary);
 
   if (summaryLoadable.state !== "hasValue") {
