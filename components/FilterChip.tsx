@@ -1,19 +1,29 @@
 import React from "react";
 import { Chip, Typography, Grid, ChipProps } from "@material-ui/core";
+import { useRecoilState } from "recoil";
+import { searchFilter } from "state";
+import { SearchField } from "interfaces";
+import { useSetRecoilState } from "recoil";
+import { Add } from "@material-ui/icons";
 
-interface FilterChipProps extends ChipProps {
-  filterKey: string;
-  label?: string;
+interface FilterChipProps extends Omit<ChipProps, "onDelete"> {
+  filterKey: SearchField["field"];
   value: string;
+  label?: string;
+  deletable?: boolean;
 }
 
 const FilterChip: React.FC<FilterChipProps> = ({
   filterKey,
   label,
   value,
+  clickable,
+  deletable,
   ...props
 }) => {
   const chipLabel = label || filterKey;
+  const setFilter = useSetRecoilState(searchFilter(filterKey));
+
   return (
     <Chip
       size="small"
@@ -29,6 +39,9 @@ const FilterChip: React.FC<FilterChipProps> = ({
           </Grid>
         </Grid>
       }
+      deleteIcon={clickable ? <Add /> : undefined}
+      onClick={clickable ? () => setFilter(value) : undefined}
+      onDelete={deletable ? () => setFilter(undefined) : undefined}
       {...props}
     />
   );

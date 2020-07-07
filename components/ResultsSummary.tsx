@@ -59,8 +59,7 @@ const ResultsSummary: React.FC = () => {
               <Grid item>
                 <Typography>
                   Found {summary.total} field contact
-                  {summary.total !== 1 ? "s" : ""} with "{searchTerm}" in the
-                  description.
+                  {summary.total !== 1 ? "s" : ""} for the provided filters.
                 </Typography>
               </Grid>
               <Grid item>
