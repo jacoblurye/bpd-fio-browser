@@ -51,8 +51,6 @@ const SearchBox: React.FC = () => {
     document.activeElement?.blur();
   });
 
-  console.log(showSuggestions);
-
   return (
     <FormContext {...formInstance}>
       <form onSubmit={handleSearch}>

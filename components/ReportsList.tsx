@@ -6,12 +6,13 @@ import {
   searchNewReports,
   useReports,
   searchSummary,
-  searchFilter,
+  searchFilters,
 } from "state";
 import { useRecoilValueLoadable, useRecoilValue } from "recoil";
+import { isEmpty } from "lodash";
 
 const ReportsList: React.FC = () => {
-  const query = useRecoilValue(searchFilter("narrative"));
+  const filters = useRecoilValue(searchFilters);
   const summaryHasLoaded =
     useRecoilValueLoadable(searchSummary).state === "hasValue";
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);
@@ -27,7 +28,7 @@ const ReportsList: React.FC = () => {
         if (noReports) {
           bottomMessage = (
             <Typography color="textSecondary">
-              found no results for "{query}"
+              found no results for the provided filters
             </Typography>
           );
         } else if (nextPageExists) {
@@ -39,7 +40,7 @@ const ReportsList: React.FC = () => {
         } else {
           bottomMessage = (
             <Typography color="textSecondary">
-              loaded all results for "{query}"
+              loaded all results for the provided filters
             </Typography>
           );
         }
@@ -59,14 +60,14 @@ const ReportsList: React.FC = () => {
             <Grid container direction="column" spacing={1}>
               {reports.map((report) => (
                 <Grid item key={report.fcNum}>
-                  <ReportOverviewCard report={report} searchTerm={query} />
+                  <ReportOverviewCard report={report} />
                 </Grid>
               ))}
             </Grid>
           </Box>
         </>
       )}
-      {query && (
+      {!isEmpty(filters) && (
         <Box height={40} textAlign="center">
           {bottomMessage}
         </Box>

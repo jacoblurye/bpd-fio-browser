@@ -13,6 +13,8 @@ import { Person } from "@material-ui/icons";
 import zipToNeighborhood from "json/zip-to-neighborhood.json";
 import theme from "style/theme";
 import { Dictionary } from "lodash";
+import { useRecoilValue } from "recoil";
+import { searchFilter } from "state";
 // import moment from "moment-timezone";
 
 const UNKNOWN = "(not provided)";
@@ -76,15 +78,12 @@ const friskMapping = {
 
 export interface ReportOverviewCardProps {
   report: FieldContact;
-  searchTerm?: string;
 }
 
-const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
-  report,
-  searchTerm,
-}) => {
+const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
   const classes = useStyles();
 
+  const searchTerm = useRecoilValue(searchFilter("narrative"));
   const lowerCaseSearchTerm = searchTerm?.toLowerCase();
   const narrativeChunks = report.narrative
     ? searchTerm
