@@ -1,7 +1,16 @@
 import React from "react";
 import { useSearchFilters } from "state";
-import { IconButton, TextField, Box, Paper, Grid } from "@material-ui/core";
-import { Search } from "@material-ui/icons";
+import {
+  IconButton,
+  TextField,
+  Box,
+  Paper,
+  Grid,
+  Divider,
+  Typography,
+  Tooltip,
+} from "@material-ui/core";
+import { Search, Close } from "@material-ui/icons";
 import { useForm, FormContext, useFormContext } from "react-hook-form";
 import FilterChip from "./FilterChip";
 import getSuggestions from "utils/get-suggestions";
@@ -50,22 +59,12 @@ const SearchBox: React.FC = () => {
                 setShowSuggestions(true);
               }}
               variant="outlined"
-              placeholder="Search 35,000 police records"
+              placeholder={
+                filters.filters.length > 0
+                  ? "Add another filter"
+                  : "Search 35,000 police records"
+              }
               InputProps={{
-                startAdornment: (
-                  <>
-                    {filters.filters.map(({ field, query }) => (
-                      <Box key={`${field}${query}`} marginRight={1}>
-                        <FilterChip
-                          deletable
-                          filterKey={field}
-                          label={FIELD_MAP[field]}
-                          value={query}
-                        />
-                      </Box>
-                    ))}
-                  </>
-                ),
                 endAdornment: (
                   <IconButton
                     style={{ background: "none" }}
@@ -82,6 +81,44 @@ const SearchBox: React.FC = () => {
           {showSuggestions && (
             <Box width="100%" marginTop={1} position="absolute" zIndex={999999}>
               <Suggestions />
+            </Box>
+          )}
+          {filters.filters.length > 0 && (
+            <Box marginTop={1}>
+              <Paper variant="outlined">
+                <Box padding={1}>
+                  <Box marginBottom={1}>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Grid item>
+                        <Typography variant="overline">Filters</Typography>
+                      </Grid>
+                      <Grid item>
+                        <Tooltip title="Clear all filters">
+                          <IconButton
+                            size="small"
+                            onClick={() => filters.setAll([])}
+                          >
+                            <Close fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </Box>
+                  <Grid container spacing={1}>
+                    {filters.filters.map(({ field, query }) => (
+                      <Grid item key={`${field}${query}`}>
+                        <FilterChip
+                          deletable
+                          filterKey={field}
+                          label={FIELD_MAP[field]}
+                          value={query}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
+              </Paper>
             </Box>
           )}
         </Box>
@@ -109,20 +146,27 @@ const Suggestions: React.FC = () => {
           value={searchValue}
         />
       </Box>
-      <Box padding={1}>
-        <Grid container spacing={1}>
-          {contactOfficerName.map((officer) => (
-            <Grid item key={officer}>
-              <FilterChip
-                clickable
-                filterKey={"contactOfficerName"}
-                label={"officer"}
-                value={officer}
-              />
+      {contactOfficerName.length > 0 && (
+        <>
+          <Box padding={1}>
+            <Divider />
+          </Box>
+          <Box padding={1}>
+            <Grid container spacing={1}>
+              {contactOfficerName.map((officer) => (
+                <Grid item key={officer}>
+                  <FilterChip
+                    clickable
+                    filterKey={"contactOfficerName"}
+                    label={"officer"}
+                    value={officer}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      </Box>
+          </Box>
+        </>
+      )}
     </Paper>
   );
 };

@@ -40,10 +40,6 @@ export const useSearchFilters = () => {
 
   const add = (filter: Omit<SearchField, "bool">) => {
     clearLoadedReports();
-    const _filter: SearchField = { ...filter };
-    if (_filter.field === "narrative") {
-      _filter.bool = "and";
-    }
     if (
       !some(
         filters.map(
@@ -51,7 +47,7 @@ export const useSearchFilters = () => {
         )
       )
     ) {
-      setFilters([...filters, _filter]);
+      setFilters([...filters, filter]);
     }
   };
   const remove = (filter: SearchField) => {

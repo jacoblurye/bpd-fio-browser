@@ -6,8 +6,8 @@ import {
   Chip,
   ChipProps,
   makeStyles,
-  Paper,
   Box,
+  Paper,
 } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
 import zipToNeighborhood from "json/zip-to-neighborhood.json";
