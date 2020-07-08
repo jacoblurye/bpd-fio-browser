@@ -13,6 +13,8 @@ import flexSearchConfig from "flexsearch.json";
 import loadFieldContactIndex from "__generated__/field-contact-index";
 import { addObjectValues } from "utils/collection-helpers";
 
+const LIMIT = 1e10;
+
 let INDEX: Index<FieldContact>;
 const getIndex = () => {
   // Build the search index if it doesn't exist
@@ -36,10 +38,10 @@ const getQueryResult = async (
   const loPage = page === true || page === undefined ? 0 : toNumber(page);
   const hiPage = limit ? loPage + toNumber(limit) : undefined;
   // @ts-ignore
-  const reports: FieldContact[] = index.search(query).slice(loPage, hiPage);
+  const allReports: FieldContact[] = index.search(query, LIMIT);
+  const reports = allReports.slice(loPage, hiPage);
   const next =
-    // @ts-ignore
-    hiPage && index.search(query).slice(hiPage, hiPage + 1).length > 0
+    hiPage && allReports.slice(hiPage, hiPage + 1).length > 0
       ? hiPage.toString()
       : undefined;
   const results: SearchResults<FieldContact> = {
@@ -82,7 +84,7 @@ const getQuerySummary = async (
   }
 
   // @ts-ignore
-  const result: FieldContact[] = index.search(query);
+  const result: FieldContact[] = index.search(query, LIMIT);
   const total = result.length;
   const { y: totalWithFrisk } = countByWithoutNull(
     result,

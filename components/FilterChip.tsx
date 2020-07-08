@@ -1,9 +1,7 @@
 import React from "react";
 import { Chip, Typography, Grid, ChipProps } from "@material-ui/core";
-import { searchFilter } from "state";
+import { useSearchFilters } from "state";
 import { SearchField } from "interfaces";
-import { useSetRecoilState } from "recoil";
-import { Add } from "@material-ui/icons";
 
 interface FilterChipProps extends Omit<ChipProps, "onDelete"> {
   filterKey: SearchField["field"];
@@ -21,7 +19,8 @@ const FilterChip: React.FC<FilterChipProps> = ({
   ...props
 }) => {
   const chipLabel = label || filterKey;
-  const setFilter = useSetRecoilState(searchFilter(filterKey));
+  const filters = useSearchFilters();
+  const filter = { field: filterKey, query: value };
 
   return (
     <Chip
@@ -38,9 +37,8 @@ const FilterChip: React.FC<FilterChipProps> = ({
           </Grid>
         </Grid>
       }
-      deleteIcon={clickable ? <Add /> : undefined}
-      onClick={clickable ? () => setFilter(value) : undefined}
-      onDelete={deletable ? () => setFilter(undefined) : undefined}
+      onClick={clickable ? () => filters.add(filter) : undefined}
+      onDelete={deletable ? () => filters.remove(filter) : undefined}
       {...props}
     />
   );

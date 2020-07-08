@@ -1,12 +1,9 @@
 import React from "react";
-import { searchFilter, searchFilters } from "state";
+import { useSearchFilters } from "state";
 import { IconButton, TextField, Box, Paper, Grid } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { useForm, FormContext, useFormContext } from "react-hook-form";
-import { useRouter } from "next/dist/client/router";
-import { useRecoilState, useRecoilValue } from "recoil";
 import FilterChip from "./FilterChip";
-import { isEmpty } from "lodash";
 import getSuggestions from "utils/get-suggestions";
 import { SearchField } from "interfaces";
 
@@ -21,31 +18,18 @@ const FIELD_MAP: Record<SearchField["field"], string> = {
 const SearchBox: React.FC = () => {
   const searchBoxRef = React.useRef<HTMLDivElement>(null);
 
-  const router = useRouter();
   const formInstance = useForm();
-  const [query, setQuery] = useRecoilState(searchFilter("narrative"));
-  const filters = useRecoilValue(searchFilters);
+  const filters = useSearchFilters();
   const [showSuggestions, setShowSuggestions] = React.useState<boolean>(false);
   React.useEffect(() => {
     formInstance.reset();
     setShowSuggestions(false);
-  }, [filters]);
+  }, [filters.filters]);
 
-  React.useEffect(() => {
-    // Sync the searchbox value with the `q` query param
-    const q = router.query.q as string;
-    if (q && q !== query) {
-      formInstance.setValue(SEARCH_BOX, q);
-      handleSearch();
-    }
-  }, [router]);
-
-  // Execute a search query based on the search box contents
+  // On submit, assume the searchbox contents are a filter on report narrative contents
   const handleSearch = formInstance.handleSubmit(({ [SEARCH_BOX]: q }) => {
-    setQuery(q);
+    filters.add({ field: "narrative", query: q });
     formInstance.reset();
-    const query = isEmpty(q) ? undefined : { q };
-    router.push({ pathname: router.pathname, query });
     // Clear searchbox focus
     // @ts-ignore
     document.activeElement?.blur();
@@ -65,15 +49,12 @@ const SearchBox: React.FC = () => {
               onChange={() => {
                 setShowSuggestions(true);
               }}
-              // onBlur={() => {
-              //   setShowSuggestions(false);
-              // }}
               variant="outlined"
               placeholder="Search 35,000 police records"
               InputProps={{
-                startAdornment: filters && (
+                startAdornment: (
                   <>
-                    {filters.map(({ field, query }) => (
+                    {filters.filters.map(({ field, query }) => (
                       <Box key={`${field}${query}`} marginRight={1}>
                         <FilterChip
                           deletable
@@ -113,6 +94,10 @@ const Suggestions: React.FC = () => {
   const { watch } = useFormContext();
   const searchValue = watch(SEARCH_BOX);
   const { contactOfficerName } = getSuggestions(searchValue);
+
+  if (!searchValue) {
+    return null;
+  }
 
   return (
     <Paper elevation={3}>

@@ -6,7 +6,8 @@ import {
   useRecoilCallback,
   useRecoilValue,
   useRecoilValueLoadable,
-  atomFamily,
+  useRecoilState,
+  useSetRecoilState,
 } from "recoil";
 import {
   FCSearchResult,
@@ -15,7 +16,7 @@ import {
   SearchField,
 } from "interfaces";
 import { SearchResults } from "flexsearch";
-import { flatMap } from "lodash";
+import { some } from "lodash";
 
 export const searchPage = atom<string | boolean>({
   key: "searchPage",
@@ -27,43 +28,48 @@ export const searchLoadedReports = atom<FieldContact[]>({
   default: [],
 });
 
-const _searchFilter = atomFamily<SearchField | undefined, SearchField["field"]>(
-  {
-    key: "_searchFilter",
-    default: undefined,
-  }
-);
-
-export const searchFilter = selectorFamily<
-  string | undefined,
-  SearchField["field"]
->({
-  key: "searchFilter",
-  get: (field) => ({ get }) => get(_searchFilter(field))?.query,
-  set: (field) => ({ set }, query) => {
-    set(
-      _searchFilter(field),
-      query ? { field, query: query as string, bool: "and" } : undefined
-    );
-
-    // Reset the search page and clear loaded reports
-    set(searchPage, true);
-    set(searchLoadedReports, []);
-  },
-});
-
-export const searchFilters = selector<SearchField[] | undefined>({
+export const searchFilters = atom<SearchField[]>({
   key: "searchFilters",
-  get: ({ get }) => {
-    return flatMap(
-      ["narrative", "contactOfficerName", "zip"],
-      (field: SearchField["field"]) => {
-        const filter = get(_searchFilter(field));
-        return filter ? filter : [];
-      }
-    );
-  },
+  default: [],
 });
+
+export const useSearchFilters = () => {
+  const [filters, setFilters] = useRecoilState(searchFilters);
+  const setLoadedReports = useSetRecoilState(searchLoadedReports);
+  const clearLoadedReports = () => setLoadedReports([]);
+
+  const add = (filter: Omit<SearchField, "bool">) => {
+    clearLoadedReports();
+    const _filter: SearchField = { ...filter };
+    if (_filter.field === "narrative") {
+      _filter.bool = "and";
+    }
+    if (
+      !some(
+        filters.map(
+          ({ field, query }) => filter.field === field && filter.query === query
+        )
+      )
+    ) {
+      setFilters([...filters, _filter]);
+    }
+  };
+  const remove = (filter: SearchField) => {
+    clearLoadedReports();
+    setFilters(
+      filters.filter(
+        ({ field, query }) =>
+          !(filter.field === field && filter.query === query)
+      )
+    );
+  };
+  const setAll = (filters: SearchField[]) => {
+    clearLoadedReports();
+    setFilters(filters);
+  };
+
+  return { filters, add, remove, setAll };
+};
 
 export const searchQuery = selectorFamily<
   FCSearchResult | undefined,

@@ -13,8 +13,6 @@ import { Person } from "@material-ui/icons";
 import zipToNeighborhood from "json/zip-to-neighborhood.json";
 import theme from "style/theme";
 import { Dictionary } from "lodash";
-import { useRecoilValue } from "recoil";
-import { searchFilter } from "state";
 // import moment from "moment-timezone";
 
 const UNKNOWN = "(not provided)";
@@ -83,8 +81,8 @@ export interface ReportOverviewCardProps {
 const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
   const classes = useStyles();
 
-  const searchTerm = useRecoilValue(searchFilter("narrative"));
-  const lowerCaseSearchTerm = searchTerm?.toLowerCase();
+  const searchTerm = undefined;
+  const lowerCaseSearchTerm = undefined;
   const narrativeChunks = report.narrative
     ? searchTerm
       ? report.narrative.split(` ${lowerCaseSearchTerm} `)
