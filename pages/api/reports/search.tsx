@@ -9,7 +9,7 @@ import {
 import { NextApiRequest, NextApiResponse } from "next";
 import FlexSearch, { CreateOptions, Index, SearchResults } from "flexsearch";
 import { addHeaders } from "utils/api-helpers";
-import { countBy, Dictionary, groupBy, flatMap, flatten, uniqBy } from "lodash";
+import { countBy, Dictionary, groupBy, flatMap, uniqBy } from "lodash";
 import flexSearchConfig from "flexsearch.json";
 import loadFieldContactIndex from "__generated__/field-contact-index";
 import { addObjectValues } from "utils/collection-helpers";
