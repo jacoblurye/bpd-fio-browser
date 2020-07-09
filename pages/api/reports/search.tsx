@@ -49,11 +49,9 @@ const getAllQueryResults = async (
       : queryGroup.map((q) => [makeRequired(q)]);
   }, [] as SearchField[][]);
 
-  // @ts-ignore
-  const searches = queries.map((q) => index.search(q, LIMIT));
-  // @ts-ignore
-  const allReports: FieldContact[] = uniqBy(
-    flatten(await Promise.all(searches)),
+  const allReports = uniqBy(
+    // @ts-ignore
+    flatMap(queries, (q) => index.search(q, LIMIT)),
     "narrative"
   );
 

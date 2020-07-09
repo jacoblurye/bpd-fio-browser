@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import {
   atom,
@@ -16,7 +17,8 @@ import {
   SearchField,
 } from "interfaces";
 import { SearchResults } from "flexsearch";
-import { some } from "lodash";
+import { isEqual } from "lodash";
+import { useRouter } from "next/dist/client/router";
 
 export const searchPage = atom<string | boolean>({
   key: "searchPage",
@@ -34,37 +36,51 @@ export const searchFilters = atom<SearchField[]>({
 });
 
 export const useSearchFilters = () => {
-  const [filters, setFilters] = useRecoilState(searchFilters);
+  const filterParam = "filters";
+
+  const router = useRouter();
+
+  const [filters, _setFilters] = useRecoilState(searchFilters);
+  React.useEffect(() => {
+    const queryFilterString = router.query[filterParam];
+    if (queryFilterString) {
+      const queryFilters: SearchField[] = Array.isArray(queryFilterString)
+        ? queryFilterString.map((v) => JSON.parse(v))
+        : JSON.parse(queryFilterString);
+      if (!isEqual(queryFilters, filters)) {
+        _setFilters(queryFilters);
+      }
+    }
+  }, [router]);
+
   const setLoadedReports = useSetRecoilState(searchLoadedReports);
   const clearLoadedReports = () => setLoadedReports([]);
 
-  const add = (filter: Omit<SearchField, "bool">) => {
+  const setFilters = (filters: SearchField[]) => {
     clearLoadedReports();
-    if (
-      !some(
-        filters.map(
-          ({ field, query }) => filter.field === field && filter.query === query
-        )
-      )
-    ) {
+    router.push({
+      pathname: router.pathname,
+      query: { [filterParam]: JSON.stringify(filters) },
+    });
+    _setFilters(filters);
+  };
+
+  const add = (filter: Omit<SearchField, "bool">) => {
+    const matchingFilters = filters.filter(
+      ({ field, query }) => filter.field === field && filter.query === query
+    );
+    if (matchingFilters.length === 0) {
       setFilters([...filters, filter]);
     }
   };
   const remove = (filter: SearchField) => {
-    clearLoadedReports();
-    setFilters(
-      filters.filter(
-        ({ field, query }) =>
-          !(filter.field === field && filter.query === query)
-      )
+    const newFilters = filters.filter(
+      ({ field, query }) => !(filter.field === field && filter.query === query)
     );
-  };
-  const setAll = (filters: SearchField[]) => {
-    clearLoadedReports();
-    setFilters(filters);
+    setFilters(newFilters);
   };
 
-  return { filters, add, remove, setAll };
+  return { filters, add, remove, setAll: setFilters };
 };
 
 export const searchQuery = selectorFamily<
