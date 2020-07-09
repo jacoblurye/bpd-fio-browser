@@ -2,15 +2,16 @@
   "name": "with-typescript",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node scripts/build-fs-index.js && next",
-    "build": "node scripts/build-fs-index.js && next build",
+    "dev": "node scripts/data-preprocessing.js && next",
+    "build": "node scripts/data-preprocessing.js && next build",
     "start": "next start",
     "type-check": "tsc",
-    "build-index": "node scripts/build-fs-index.js"
+    "data-preprocessing": "node scripts/data-preprocessing.js"
   },
   "dependencies": {
     "@material-ui/core": "^4.10.2",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@n8tb1t/use-scroll-position": "^1.0.43",
     "@types/leaflet": "^1.5.12",
     "@types/lodash": "^4.14.155",
@@ -19,6 +20,7 @@
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "flexsearch": "nextapps-de/flexsearch",
+    "husky": "^4.2.5",
     "leaflet": "^1.6.0",
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
@@ -36,6 +38,11 @@
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
     "typescript": "3.7.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn tsc"
+    }
   },
   "license": "ISC"
 }

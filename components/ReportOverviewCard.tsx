@@ -1,13 +1,13 @@
 import React from "react";
 import { FieldContact } from "interfaces";
 import {
-  Card,
-  CardContent,
   Typography,
   Grid,
   Chip,
   ChipProps,
   makeStyles,
+  Box,
+  Paper,
 } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
 import zipToNeighborhood from "json/zip-to-neighborhood.json";
@@ -76,18 +76,17 @@ const friskMapping = {
 
 export interface ReportOverviewCardProps {
   report: FieldContact;
-  searchTerm: string;
 }
 
-const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
-  report,
-  searchTerm,
-}) => {
+const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
   const classes = useStyles();
 
-  const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  const searchTerm = undefined;
+  const lowerCaseSearchTerm = undefined;
   const narrativeChunks = report.narrative
-    ? report.narrative.split(` ${lowerCaseSearchTerm} `)
+    ? searchTerm
+      ? report.narrative.split(` ${lowerCaseSearchTerm} `)
+      : [report.narrative]
     : [];
   const lastChunk = narrativeChunks.length - 1;
 
@@ -109,8 +108,8 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
   //   " (WRONG)";
 
   return (
-    <Card>
-      <CardContent>
+    <Paper variant="outlined">
+      <Box padding={1}>
         <Grid container direction="column" spacing={1}>
           <Grid item>
             <Grid container spacing={1}>
@@ -167,8 +166,8 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({
             })}
           </Grid>
         </Grid>
-      </CardContent>
-    </Card>
+      </Box>
+    </Paper>
   );
 };
 

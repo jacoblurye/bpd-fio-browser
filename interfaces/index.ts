@@ -1,7 +1,7 @@
 // Shared interfaces used throughout the app.
 
 import { Dictionary } from "lodash";
-import { SearchResults } from "flexsearch";
+import { SearchResults, SearchOptions as FSSearchOptions } from "flexsearch";
 
 export type FieldContact = {
   fcNum: string;
@@ -61,7 +61,18 @@ export type Officer = {
   stops: FieldContactCollection;
 };
 
-export interface FCSearchResultSummary {
+export type SearchField = {
+  field: "narrative" | "contactOfficerName" | "zip";
+  query: string;
+  bool?: "and" | "or" | "not";
+};
+
+export type SearchOptions = FSSearchOptions & {
+  query: SearchField[];
+  page?: number | true;
+};
+
+export type SearchResultSummary = {
   total: number;
   totalWithFrisk: number;
   totalByZip: Dictionary<number>;
@@ -69,9 +80,9 @@ export interface FCSearchResultSummary {
   totalByGender: Dictionary<number>;
   totalByBasis: Dictionary<number>;
   totalByAge: Dictionary<number>;
-}
+};
 
-export interface FCSearchResult {
+export type FCSearchResult = {
   results: SearchResults<FieldContact>;
-  summary: FCSearchResultSummary;
-}
+  summary: SearchResultSummary;
+};

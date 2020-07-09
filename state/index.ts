@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import {
   atom,
@@ -6,13 +7,18 @@ import {
   useRecoilCallback,
   useRecoilValue,
   useRecoilValueLoadable,
+  useRecoilState,
+  useSetRecoilState,
 } from "recoil";
 import {
   FCSearchResult,
   FieldContact,
-  FCSearchResultSummary,
+  SearchResultSummary,
+  SearchField,
 } from "interfaces";
 import { SearchResults } from "flexsearch";
+import { isEqual } from "lodash";
+import { useRouter } from "next/dist/client/router";
 
 export const searchPage = atom<string | boolean>({
   key: "searchPage",
@@ -24,34 +30,77 @@ export const searchLoadedReports = atom<FieldContact[]>({
   default: [],
 });
 
-const searchQueryInternal = atom<string>({
-  key: "searchQueryInternal",
-  default: "",
+export const searchFilters = atom<SearchField[]>({
+  key: "searchFilters",
+  default: [],
 });
 
-export const searchQuery = selector<string>({
-  key: "searchQuery",
-  get: ({ get }) => get(searchQueryInternal),
-  set: ({ set }, query) => {
-    set(searchQueryInternal, query);
+export const useSearchFilters = () => {
+  const filterParam = "filters";
 
-    // Reset the search page and clear loaded reports
-    set(searchPage, true);
-    set(searchLoadedReports, []);
-  },
-});
+  const router = useRouter();
 
-export const searchQueryResults = selectorFamily<
+  const [filters, _setFilters] = useRecoilState(searchFilters);
+  React.useEffect(() => {
+    const queryFilterString = router.query[filterParam];
+    if (queryFilterString) {
+      const queryFilters: SearchField[] = Array.isArray(queryFilterString)
+        ? queryFilterString.map((v) => JSON.parse(v))
+        : JSON.parse(queryFilterString);
+      if (!isEqual(queryFilters, filters)) {
+        _setFilters(queryFilters);
+      }
+    }
+  }, [router]);
+
+  const setLoadedReports = useSetRecoilState(searchLoadedReports);
+  const clearLoadedReports = () => setLoadedReports([]);
+
+  const setFilters = (filters: SearchField[]) => {
+    clearLoadedReports();
+    router.push({
+      pathname: router.pathname,
+      query: { [filterParam]: JSON.stringify(filters) },
+    });
+    _setFilters(filters);
+  };
+
+  const add = (filter: Omit<SearchField, "bool">) => {
+    const matchingFilters = filters.filter(
+      ({ field, query }) => filter.field === field && filter.query === query
+    );
+    if (matchingFilters.length === 0) {
+      setFilters([...filters, filter]);
+    }
+  };
+  const remove = (filter: SearchField) => {
+    const newFilters = filters.filter(
+      ({ field, query }) => !(filter.field === field && filter.query === query)
+    );
+    setFilters(newFilters);
+  };
+
+  return { filters, add, remove, setAll: setFilters };
+};
+
+export const searchQuery = selectorFamily<
   FCSearchResult | undefined,
-  { query: string; page: string | boolean; limit: number }
+  { query: SearchField[]; page: string | boolean; limit: number }
 >({
-  key: "searchQueryResults",
+  key: "searchQuery",
   get: (q) => async () => {
     if (q.query) {
-      const { data } = await axios.get<FCSearchResult>("/api/reports/search", {
-        params: { q },
-      });
-      return data;
+      try {
+        const { data } = await axios.get<FCSearchResult>(
+          "/api/reports/search",
+          {
+            params: { q },
+          }
+        );
+        return data;
+      } catch (e) {
+        // TODO: catch this
+      }
     }
     return undefined;
   },
@@ -62,23 +111,23 @@ export const searchNewReports = selector<
 >({
   key: "searchNewReports",
   get: async ({ get }) => {
-    const query = get(searchQuery);
+    const filters = get(searchFilters);
     const page = get(searchPage);
-    if (query) {
-      return get(searchQueryResults({ query, page, limit: 25 }))?.results;
+    if (filters) {
+      return get(searchQuery({ query: filters, page, limit: 25 }))?.results;
     }
     return undefined;
   },
 });
 
-export const searchSummary = selector<FCSearchResultSummary | undefined>({
+export const searchSummary = selector<SearchResultSummary | undefined>({
   key: "searchResultsSummary",
   get: async ({ get }) => {
-    const query = get(searchQuery);
-    if (query) {
+    const filters = get(searchFilters);
+    if (filters) {
       // Summary is the same no matter the value of `page` or `limit`
       const searchResults = get(
-        searchQueryResults({ query, page: true, limit: 1 })
+        searchQuery({ query: filters, page: true, limit: 1 })
       );
       return searchResults?.summary;
     }

@@ -1,25 +1,29 @@
 import React from "react";
 import { useRecoilCallback } from "recoil";
-import { searchQueryResults } from "state";
+import { searchQuery } from "state";
 
 const WakeupSearch: React.FC = () => {
   // Issue a random query to the search API to wake up
   // the vercel function if it's gone to sleep.
   const doWakeup = useRecoilCallback(
     ({ snapshot }) => () => {
-      snapshot.getPromise(
-        searchQueryResults({
-          query: Math.random().toString(),
-          page: true,
-          limit: 1,
-        })
-      );
+      snapshot
+        .getPromise(
+          searchQuery({
+            query: [{ field: "narrative", query: Math.random().toString() }],
+            page: true,
+            limit: 1,
+          })
+        )
+        .catch(console.error);
     },
     []
   );
 
   React.useEffect(() => {
-    doWakeup();
+    if (typeof window !== undefined) {
+      doWakeup();
+    }
   }, []);
 
   return null;

@@ -3,15 +3,14 @@ import dynamic from "next/dynamic";
 import { Grid, Typography, Box, Divider, Hidden } from "@material-ui/core";
 import { Dictionary, sum, mapValues } from "lodash";
 import StatsGroup from "./StatsGroup";
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
-import { searchSummary, searchQuery } from "state";
+import { useRecoilValueLoadable } from "recoil";
+import { searchSummary } from "state";
 
 const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
   ssr: false,
 });
 
 const ResultsSummary: React.FC = () => {
-  const searchTerm = useRecoilValue(searchQuery);
   const summaryLoadable = useRecoilValueLoadable(searchSummary);
 
   if (summaryLoadable.state !== "hasValue") {
@@ -59,8 +58,7 @@ const ResultsSummary: React.FC = () => {
               <Grid item>
                 <Typography>
                   Found {summary.total} field contact
-                  {summary.total !== 1 ? "s" : ""} with "{searchTerm}" in the
-                  description.
+                  {summary.total !== 1 ? "s" : ""} for the provided filters.
                 </Typography>
               </Grid>
               <Grid item>

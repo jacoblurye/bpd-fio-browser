@@ -1,7 +1,14 @@
 {
   "tokenize": "strict",
+  "cache": 1000,
   "doc": {
     "id": "fcNum",
-    "field": "narrative"
+    "field": [
+      "narrative",
+      "contactOfficerName",
+      "gender",
+      "zip",
+      "fcInvolvedFriskOrSearch"
+    ]
   }
 }

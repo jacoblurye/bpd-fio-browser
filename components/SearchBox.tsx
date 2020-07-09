@@ -1,57 +1,173 @@
 import React from "react";
-import { searchQuery } from "state";
-import { IconButton, TextField } from "@material-ui/core";
-import { Search } from "@material-ui/icons";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/dist/client/router";
-import { useSetRecoilState } from "recoil";
+import { useSearchFilters } from "state";
+import {
+  IconButton,
+  TextField,
+  Box,
+  Paper,
+  Grid,
+  Divider,
+  Typography,
+  Tooltip,
+} from "@material-ui/core";
+import { Search, Close } from "@material-ui/icons";
+import { useForm, FormContext, useFormContext } from "react-hook-form";
+import FilterChip from "./FilterChip";
+import getSuggestions from "utils/get-suggestions";
+import { SearchField } from "interfaces";
 
 const SEARCH_BOX = "search-box";
 
+const FIELD_MAP: Record<SearchField["field"], string> = {
+  narrative: "report contains",
+  contactOfficerName: "officer",
+  zip: "area",
+};
+
 const SearchBox: React.FC = () => {
-  const router = useRouter();
-  const { handleSubmit, register, setValue, getValues } = useForm();
-  const setQuery = useSetRecoilState(searchQuery);
+  const searchBoxRef = React.useRef<HTMLDivElement>(null);
 
+  const formInstance = useForm();
+  const filters = useSearchFilters();
+  const [showSuggestions, setShowSuggestions] = React.useState<boolean>(false);
   React.useEffect(() => {
-    // Sync the searchbox value with the `q` query param
-    const q = router.query.q as string;
-    if (q && q !== getValues()[SEARCH_BOX]) {
-      setValue(SEARCH_BOX, q);
-      handleSearch();
-    }
-  }, [router]);
+    formInstance.reset();
+    setShowSuggestions(false);
+  }, [filters.filters]);
 
-  // Execute a search query based on the search box contents
-  const handleSearch = handleSubmit(({ [SEARCH_BOX]: q }) => {
-    setQuery(q);
-    const query = q ? { q } : undefined;
-    router.push({ pathname: router.pathname, query });
+  // On submit, assume the searchbox contents are a filter on report narrative contents
+  const handleSearch = formInstance.handleSubmit(({ [SEARCH_BOX]: q }) => {
+    filters.add({ field: "narrative", query: q });
+    formInstance.reset();
     // Clear searchbox focus
     // @ts-ignore
     document.activeElement?.blur();
   });
 
   return (
-    <form onSubmit={handleSearch}>
-      <TextField
-        name={SEARCH_BOX}
-        inputRef={register}
-        fullWidth
-        autoFocus
-        variant="outlined"
-        placeholder="Search 35,000 police records"
-        InputProps={{
-          endAdornment: (
-            <IconButton style={{ background: "none" }} onClick={handleSearch}>
-              <Search />
-            </IconButton>
-          ),
-        }}
-        autoComplete="off"
-        autoCorrect="off"
-      />
-    </form>
+    <FormContext {...formInstance}>
+      <form onSubmit={handleSearch}>
+        <Box position="relative">
+          <Box>
+            <TextField
+              name={SEARCH_BOX}
+              ref={searchBoxRef}
+              inputRef={formInstance.register}
+              fullWidth
+              autoFocus
+              onChange={() => {
+                setShowSuggestions(true);
+              }}
+              variant="outlined"
+              placeholder={
+                filters.filters.length > 0
+                  ? "Add another filter"
+                  : "Search 35,000 police records"
+              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    style={{ background: "none" }}
+                    onClick={handleSearch}
+                  >
+                    <Search />
+                  </IconButton>
+                ),
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+            />
+          </Box>
+          {showSuggestions && (
+            <Box width="100%" marginTop={1} position="absolute" zIndex={999999}>
+              <Suggestions />
+            </Box>
+          )}
+          {filters.filters.length > 0 && (
+            <Box marginTop={1}>
+              <Paper variant="outlined">
+                <Box padding={1}>
+                  <Box marginBottom={1}>
+                    <Grid container justify="space-between" alignItems="center">
+                      <Grid item>
+                        <Typography variant="overline">Filters</Typography>
+                      </Grid>
+                      <Grid item>
+                        <Tooltip title="Clear all filters">
+                          <IconButton
+                            size="small"
+                            onClick={() => filters.setAll([])}
+                          >
+                            <Close fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Grid>
+                    </Grid>
+                    <Divider />
+                  </Box>
+                  <Grid container spacing={1}>
+                    {filters.filters.map(({ field, query }) => (
+                      <Grid item key={`${field}${query}`}>
+                        <FilterChip
+                          deletable
+                          filterKey={field}
+                          label={FIELD_MAP[field]}
+                          value={query}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
+              </Paper>
+            </Box>
+          )}
+        </Box>
+      </form>
+    </FormContext>
+  );
+};
+
+const Suggestions: React.FC = () => {
+  const { watch } = useFormContext();
+  const searchValue = watch(SEARCH_BOX);
+  const { contactOfficerName } = getSuggestions(searchValue);
+
+  if (!searchValue) {
+    return null;
+  }
+
+  return (
+    <Paper elevation={3}>
+      <Box padding={1}>
+        <FilterChip
+          clickable
+          filterKey={"narrative"}
+          label={"Report contains"}
+          value={searchValue}
+        />
+      </Box>
+      {contactOfficerName.length > 0 && (
+        <>
+          <Box padding={1}>
+            <Divider />
+          </Box>
+          <Box padding={1}>
+            <Grid container spacing={1}>
+              {contactOfficerName.map((officer) => (
+                <Grid item key={officer}>
+                  <FilterChip
+                    clickable
+                    filterKey={"contactOfficerName"}
+                    label={"officer"}
+                    value={officer}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        </>
+      )}
+    </Paper>
   );
 };
 

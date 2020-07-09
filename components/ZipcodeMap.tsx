@@ -29,7 +29,6 @@ const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
     // @ts-ignore
     <GeoJSON
       data={zipcodeGeoJSON}
-      onClick={console.log}
       style={(feat) => {
         if (feat) {
           const count = zipCounts[feat?.properties.ZIP5] || 0;
