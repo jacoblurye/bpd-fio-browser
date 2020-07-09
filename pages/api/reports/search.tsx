@@ -4,11 +4,12 @@ import {
   SearchResultSummary,
   FCSearchResult,
   SearchOptions,
+  SearchField,
 } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import FlexSearch, { CreateOptions, Index, SearchResults } from "flexsearch";
 import { addHeaders } from "utils/api-helpers";
-import { countBy, Dictionary } from "lodash";
+import { countBy, Dictionary, groupBy, flatMap, flatten, uniqBy } from "lodash";
 import flexSearchConfig from "flexsearch.json";
 import loadFieldContactIndex from "__generated__/field-contact-index";
 import { addObjectValues } from "utils/collection-helpers";
@@ -30,25 +31,56 @@ const getIndex = () => {
 const toNumber = (v: string | number) =>
   typeof v === "string" ? parseInt(v, 10) : v;
 
+const makeRequired = (field: SearchField): SearchField => ({
+  ...field,
+  bool: "and",
+});
+
+const getAllQueryResults = async (
+  index: Index<FieldContact>,
+  query: SearchField[]
+) => {
+  const queryGroups = Object.values(groupBy(query, "field"));
+  const queries = queryGroups.reduce((queries, queryGroup) => {
+    return queries.length > 0
+      ? flatMap(queryGroup, (q) =>
+          queries.map((qs) => [...qs, makeRequired(q)])
+        )
+      : queryGroup.map((q) => [makeRequired(q)]);
+  }, [] as SearchField[][]);
+
+  // @ts-ignore
+  const searches = queries.map((q) => index.search(q, LIMIT));
+  // @ts-ignore
+  const allReports: FieldContact[] = uniqBy(
+    flatten(await Promise.all(searches)),
+    "narrative"
+  );
+
+  return allReports;
+};
+
 const getQueryResult = async (
   index: Index<FieldContact>,
   options: SearchOptions
 ) => {
   const { query, page, limit } = options;
+  const allReports = await getAllQueryResults(index, query);
+
   const loPage = page === true || page === undefined ? 0 : toNumber(page);
   const hiPage = limit ? loPage + toNumber(limit) : undefined;
-  // @ts-ignore
-  const allReports: FieldContact[] = index.search(query, LIMIT);
   const reports = allReports.slice(loPage, hiPage);
   const next =
     hiPage && allReports.slice(hiPage, hiPage + 1).length > 0
       ? hiPage.toString()
       : undefined;
+
   const results: SearchResults<FieldContact> = {
     result: reports,
     page: loPage.toString(),
     next,
   };
+
   return results;
 };
 
@@ -84,17 +116,17 @@ const getQuerySummary = async (
   }
 
   // @ts-ignore
-  const result: FieldContact[] = index.search(query, LIMIT);
-  const total = result.length;
+  const reports: FieldContact[] = await getAllQueryResults(index, query);
+  const total = reports.length;
   const { y: totalWithFrisk } = countByWithoutNull(
-    result,
+    reports,
     "fcInvolvedFriskOrSearch"
   );
-  const totalByZip = countByWithoutNull(result, "zip");
-  const totalByBasis = countByWithoutNull(result, "basis");
-  const totalByRace = countByPersonField(result, "race");
-  const totalByGender = countByPersonField(result, "gender");
-  const totalByAge = countByPersonField(result, "age");
+  const totalByZip = countByWithoutNull(reports, "zip");
+  const totalByBasis = countByWithoutNull(reports, "basis");
+  const totalByRace = countByPersonField(reports, "race");
+  const totalByGender = countByPersonField(reports, "gender");
+  const totalByAge = countByPersonField(reports, "age");
   const summary = {
     total,
     totalWithFrisk,

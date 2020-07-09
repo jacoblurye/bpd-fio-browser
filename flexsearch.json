@@ -1,4 +1,5 @@
 {
+  "async": true,
   "tokenize": "strict",
   "cache": 1000,
   "doc": {
