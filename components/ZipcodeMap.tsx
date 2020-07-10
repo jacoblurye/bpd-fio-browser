@@ -32,7 +32,11 @@ const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
       style={(feat) => {
         if (feat) {
           const count = zipCounts[feat?.properties.ZIP5] || 0;
-          return { weight: 1, fillOpacity: count / maxCount / 1.5 };
+          return {
+            weight: 1,
+            fillOpacity: count / maxCount / 1.5,
+            color: "grey",
+          };
         }
       }}
     />
@@ -49,7 +53,7 @@ const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
       {...disableInteractions}
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
       />
       {geoJSONLayer}

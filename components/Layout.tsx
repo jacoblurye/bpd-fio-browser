@@ -2,12 +2,13 @@ import React, { ReactNode } from "react";
 import Head from "next/head";
 import ScrollToTop from "./ScrollToTop";
 import { Box } from "@material-ui/core";
-type Props = {
+
+type LayoutProps = {
   children?: ReactNode;
   title?: string;
 };
 
-const Layout = ({ title, children }: Props) => {
+const Layout = ({ title, children }: LayoutProps) => {
   return (
     <ScrollToTop>
       <Box m="auto" maxWidth={960}>
