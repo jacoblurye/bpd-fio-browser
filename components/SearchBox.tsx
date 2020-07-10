@@ -15,6 +15,7 @@ import { useForm, FormContext, useFormContext } from "react-hook-form";
 import FilterChip from "./FilterChip";
 import getSuggestions from "utils/get-suggestions";
 import { SearchField } from "interfaces";
+import { map } from "lodash";
 
 const SEARCH_BOX = "search-box";
 
@@ -22,6 +23,8 @@ const FIELD_MAP: Record<SearchField["field"], string> = {
   narrative: "report contains",
   contactOfficerName: "officer",
   zip: "area",
+  basis: "basis",
+  fcInvolvedFriskOrSearch: "involved frisk",
 };
 
 const SearchBox: React.FC = () => {
@@ -130,7 +133,7 @@ const SearchBox: React.FC = () => {
 const Suggestions: React.FC = () => {
   const { watch } = useFormContext();
   const searchValue = watch(SEARCH_BOX);
-  const { contactOfficerName } = getSuggestions(searchValue);
+  const suggestions = getSuggestions(searchValue);
 
   if (!searchValue) {
     return null;
@@ -142,31 +145,35 @@ const Suggestions: React.FC = () => {
         <FilterChip
           clickable
           filterKey={"narrative"}
-          label={"Report contains"}
+          label={FIELD_MAP.narrative}
           value={searchValue}
         />
       </Box>
-      {contactOfficerName.length > 0 && (
-        <>
-          <Box padding={1}>
-            <Divider />
-          </Box>
-          <Box padding={1}>
-            <Grid container spacing={1}>
-              {contactOfficerName.map((officer) => (
-                <Grid item key={officer}>
-                  <FilterChip
-                    clickable
-                    filterKey={"contactOfficerName"}
-                    label={"officer"}
-                    value={officer}
-                  />
+      {map(suggestions, (values, key: SearchField["field"]) => {
+        return (
+          values.length > 0 && (
+            <>
+              <Box padding={1}>
+                <Divider />
+              </Box>
+              <Box padding={1}>
+                <Grid container spacing={1}>
+                  {values.map((value) => (
+                    <Grid item key={value}>
+                      <FilterChip
+                        clickable
+                        filterKey={key}
+                        label={FIELD_MAP[key]}
+                        value={value}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </>
-      )}
+              </Box>
+            </>
+          )
+        );
+      })}
     </Paper>
   );
 };

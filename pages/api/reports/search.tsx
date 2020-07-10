@@ -51,7 +51,7 @@ const getAllQueryResults = async (
 
   const allReports = uniqBy(
     // @ts-ignore
-    flatMap(queries, (q) => index.search(q, LIMIT)),
+    flatMap(queries, (q) => index.search(q, LIMIT)) as FieldContact[],
     "narrative"
   );
 
@@ -63,7 +63,7 @@ const getQueryResult = async (
   options: SearchOptions
 ) => {
   const { query, page, limit } = options;
-  const allReports = await getAllQueryResults(index, query);
+  const allReports: FieldContact[] = await getAllQueryResults(index, query);
 
   const loPage = page === true || page === undefined ? 0 : toNumber(page);
   const hiPage = limit ? loPage + toNumber(limit) : undefined;
@@ -82,22 +82,12 @@ const getQueryResult = async (
   return results;
 };
 
-const countByWithoutNull = (...args: Parameters<typeof countBy>) => {
-  let counts = countBy(...args);
-  // @ts-ignore
-  if (counts["null"]) {
-    counts.unknown = (counts.unknown || 0) + counts["null"];
-    delete counts["null"];
-  }
-  return counts;
-};
-
 const countByPersonField = (
   fcs: FieldContact[],
   field: keyof Person
 ): Dictionary<number> => {
   return fcs.reduce((overallCounts, fc) => {
-    let personCounts = countByWithoutNull(fc.people, field);
+    let personCounts = countBy(fc.people, field);
 
     return addObjectValues(overallCounts, personCounts);
   }, {});
@@ -116,18 +106,15 @@ const getQuerySummary = async (
   // @ts-ignore
   const reports: FieldContact[] = await getAllQueryResults(index, query);
   const total = reports.length;
-  const { y: totalWithFrisk } = countByWithoutNull(
-    reports,
-    "fcInvolvedFriskOrSearch"
-  );
-  const totalByZip = countByWithoutNull(reports, "zip");
-  const totalByBasis = countByWithoutNull(reports, "basis");
+  const totalByFrisked = countBy(reports, "fcInvolvedFriskOrSearch");
+  const totalByZip = countBy(reports, "zip");
+  const totalByBasis = countBy(reports, "basis");
   const totalByRace = countByPersonField(reports, "race");
   const totalByGender = countByPersonField(reports, "gender");
   const totalByAge = countByPersonField(reports, "age");
-  const summary = {
+  const summary: SearchResultSummary = {
     total,
-    totalWithFrisk,
+    totalByFrisked,
     totalByZip,
     totalByRace,
     totalByGender,

@@ -42,7 +42,7 @@ const ResultsSummary: React.FC = () => {
 
   const totalPeople = sum(Object.values(summary.totalByRace));
 
-  const friskPercent = getPercent(summary.totalWithFrisk, summary.total);
+  const friskedPercent = getPercents(summary.totalByFrisked, summary.total);
   const basisPercents = getPercents(summary.totalByBasis, summary.total);
   const racePercents = getPercents(summary.totalByRace, totalPeople);
   const genderPercents = getPercents(summary.totalByGender, totalPeople);
@@ -62,10 +62,24 @@ const ResultsSummary: React.FC = () => {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography>{friskPercent} involved a frisk search.</Typography>
+                <StatsGroup
+                  title="involved frisk search"
+                  data={friskedPercent}
+                  getFilter={(label) => ({
+                    field: "fcInvolvedFriskOrSearch",
+                    query: label,
+                  })}
+                />
               </Grid>
               <Grid item>
-                <StatsGroup title="basis" data={basisPercents} />
+                <Divider />
+              </Grid>
+              <Grid item>
+                <StatsGroup
+                  title="basis"
+                  data={basisPercents}
+                  getFilter={(label) => ({ field: "basis", query: label })}
+                />
               </Grid>
               <Grid item>
                 <Divider />

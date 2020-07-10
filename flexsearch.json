@@ -6,8 +6,8 @@
     "field": [
       "narrative",
       "contactOfficerName",
-      "gender",
       "zip",
+      "basis",
       "fcInvolvedFriskOrSearch"
     ]
   }

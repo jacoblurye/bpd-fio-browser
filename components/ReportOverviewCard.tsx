@@ -15,16 +15,6 @@ import theme from "style/theme";
 import { Dictionary } from "lodash";
 // import moment from "moment-timezone";
 
-const UNKNOWN = "(not provided)";
-
-const titleCase = (str: string) => {
-  return str
-    .toLowerCase()
-    .split(" ")
-    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
-    .join(" ");
-};
-
 const useStyles = makeStyles({
   inlineText: {
     display: "inline",
@@ -70,8 +60,8 @@ const LabelledChip: React.FC<LabelledChipProps> = ({
 };
 
 const friskMapping = {
-  y: "Yes",
-  n: "No",
+  y: "yes",
+  n: "no",
 };
 
 export interface ReportOverviewCardProps {
@@ -90,15 +80,13 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
     : [];
   const lastChunk = narrativeChunks.length - 1;
 
-  const officerName = report.contactOfficerName
-    ? titleCase(report.contactOfficerName)
-    : UNKNOWN;
+  const officerName = report.contactOfficerName;
 
-  const basis = titleCase(report.basis || UNKNOWN);
+  const basis = report.basis;
 
-  const friskSearch = report.fcInvolvedFriskOrSearch
-    ? friskMapping[report.fcInvolvedFriskOrSearch]
-    : UNKNOWN;
+  const friskSearch =
+    friskMapping[report.fcInvolvedFriskOrSearch] ||
+    report.fcInvolvedFriskOrSearch;
 
   const area = report.zip
     ? (zipToNeighborhood as Dictionary<string>)[report.zip] || "Boston"
@@ -131,13 +119,11 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
               </Grid>
               <Grid item xs={12} />
               {report.people.map((person, i) => {
-                const race = person.race || UNKNOWN;
-                const gender = person.gender || UNKNOWN;
-                const age = person.age || UNKNOWN;
                 const profile =
-                  !person.race && !person.gender
-                    ? UNKNOWN
-                    : `${titleCase(`${race} ${gender}`)} | ${age}`;
+                  person.race === "(not reported)" &&
+                  person.gender === "(not reported)"
+                    ? "(not reported)"
+                    : `${`${person.race} ${person.gender}`} | ${person.age}`;
                 return (
                   <Grid key={i} item>
                     <LabelledChip avatar={<Person />} value={profile} />
