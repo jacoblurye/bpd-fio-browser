@@ -37,10 +37,13 @@
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "typescript": "3.7.3"
   },
   "husky": {
     "hooks": {
+      "pre-commit": "yarn pretty-quick --staged",
       "pre-push": "yarn tsc"
     }
   },

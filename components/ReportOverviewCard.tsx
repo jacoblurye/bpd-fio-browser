@@ -1,18 +1,10 @@
 import React from "react";
 import { FieldContact } from "interfaces";
-import {
-  Typography,
-  Grid,
-  Chip,
-  ChipProps,
-  makeStyles,
-  Box,
-  Paper,
-} from "@material-ui/core";
+import { Typography, Grid, makeStyles, Box, Paper } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
-import zipToNeighborhood from "json/zip-to-neighborhood.json";
 import theme from "style/theme";
-import { Dictionary } from "lodash";
+import FilterChip from "components/FilterChip";
+import LabelledChip from "./LabelledChip";
 // import moment from "moment-timezone";
 
 const useStyles = makeStyles({
@@ -26,43 +18,6 @@ const useStyles = makeStyles({
     padding: 3,
   },
 });
-
-interface LabelledChipProps extends ChipProps {
-  label?: string;
-  value: string;
-}
-
-const LabelledChip: React.FC<LabelledChipProps> = ({
-  label,
-  value,
-  ...props
-}) => {
-  return (
-    <Chip
-      size="small"
-      label={
-        <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
-          {label && (
-            <Grid item>
-              <Typography color="textSecondary" variant="overline">
-                {label}
-              </Typography>
-            </Grid>
-          )}
-          <Grid item>
-            <Typography variant="body2">{value}</Typography>
-          </Grid>
-        </Grid>
-      }
-      {...props}
-    />
-  );
-};
-
-const friskMapping = {
-  y: "yes",
-  n: "no",
-};
 
 export interface ReportOverviewCardProps {
   report: FieldContact;
@@ -81,16 +36,8 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
   const lastChunk = narrativeChunks.length - 1;
 
   const officerName = report.contactOfficerName;
-
   const basis = report.basis;
-
-  const friskSearch =
-    friskMapping[report.fcInvolvedFriskOrSearch] ||
-    report.fcInvolvedFriskOrSearch;
-
-  const area = report.zip
-    ? (zipToNeighborhood as Dictionary<string>)[report.zip] || "Boston"
-    : "Boston";
+  const friskSearch = report.fcInvolvedFriskOrSearch;
   // const contactTime =
   //   moment(report.contactDate).tz("EST").format("MMM. D YYYY @ hh:mm A") +
   //   " (WRONG)";
@@ -102,20 +49,29 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
           <Grid item>
             <Grid container spacing={1}>
               <Grid item>
-                <LabelledChip
+                <FilterChip
                   label="officer"
+                  filterKey="contactOfficerName"
                   value={officerName}
-                  onClick={() => alert(report.contactOfficerName)}
                 />
               </Grid>
               <Grid item>
-                <LabelledChip label="basis" value={basis} />
+                <FilterChip filterKey="basis" value={basis} />
               </Grid>
               <Grid item>
-                <LabelledChip label="frisked" value={friskSearch} />
+                <FilterChip
+                  label="frisked"
+                  filterKey="fcInvolvedFriskOrSearch"
+                  value={friskSearch}
+                />
               </Grid>
               <Grid item>
-                <LabelledChip label="area" value={area} />
+                <FilterChip
+                  clickable
+                  label="area"
+                  filterKey="zip"
+                  value={report.zip}
+                />
               </Grid>
               <Grid item xs={12} />
               {report.people.map((person, i) => {

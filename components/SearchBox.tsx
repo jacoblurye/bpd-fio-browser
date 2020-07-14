@@ -112,7 +112,6 @@ const SearchBox: React.FC = () => {
                     {filters.filters.map(({ field, query }) => (
                       <Grid item key={`${field}${query}`}>
                         <FilterChip
-                          deletable
                           filterKey={field}
                           label={FIELD_MAP[field]}
                           value={query}
@@ -152,7 +151,7 @@ const Suggestions: React.FC = () => {
       {map(suggestions, (values, key: SearchField["field"]) => {
         return (
           values.length > 0 && (
-            <>
+            <React.Fragment key={key}>
               <Box padding={1}>
                 <Divider />
               </Box>
@@ -170,7 +169,7 @@ const Suggestions: React.FC = () => {
                   ))}
                 </Grid>
               </Box>
-            </>
+            </React.Fragment>
           )
         );
       })}

@@ -8,7 +8,9 @@
       "contactOfficerName",
       "zip",
       "basis",
-      "fcInvolvedFriskOrSearch"
+      "fcInvolvedFriskOrSearch",
+      "people[gender]",
+      "people[race]"
     ]
   }
 }

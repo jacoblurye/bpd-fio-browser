@@ -65,10 +65,7 @@ const ResultsSummary: React.FC = () => {
                 <StatsGroup
                   title="involved frisk search"
                   data={friskedPercent}
-                  getFilter={(label) => ({
-                    field: "fcInvolvedFriskOrSearch",
-                    query: label,
-                  })}
+                  filterKey="fcInvolvedFriskOrSearch"
                 />
               </Grid>
               <Grid item>
@@ -78,7 +75,7 @@ const ResultsSummary: React.FC = () => {
                 <StatsGroup
                   title="basis"
                   data={basisPercents}
-                  getFilter={(label) => ({ field: "basis", query: label })}
+                  filterKey="basis"
                 />
               </Grid>
               <Grid item>

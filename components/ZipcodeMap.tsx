@@ -4,6 +4,7 @@ import { Map, TileLayer, GeoJSON } from "react-leaflet";
 import zipcodeGeoJSON from "json/boston-zipcodes.json";
 import { geoJSON } from "leaflet";
 import theme from "style/theme";
+import { useSearchFilters } from "state";
 
 // @ts-ignore
 const mapBounds = geoJSON(zipcodeGeoJSON).getBounds();
@@ -24,6 +25,7 @@ export interface ZipcodeMapProps {
 
 const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
   const maxCount = max(Object.values(zipCounts)) || 0;
+  const filters = useSearchFilters();
 
   const geoJSONLayer = (
     // @ts-ignore
@@ -31,8 +33,14 @@ const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
       data={zipcodeGeoJSON}
       style={(feat) => {
         if (feat) {
-          const count = zipCounts[feat?.properties.ZIP5] || 0;
+          const count = zipCounts[feat.properties.ZIP5] || 0;
           return { weight: 1, fillOpacity: count / maxCount / 1.5 };
+        }
+      }}
+      onClick={({ layer: { feature } }: any) => {
+        const zip = feature?.properties.ZIP5;
+        if (zip) {
+          filters.add({ field: "zip", query: zip });
         }
       }}
     />

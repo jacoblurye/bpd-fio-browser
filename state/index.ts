@@ -41,6 +41,8 @@ export const useSearchFilters = () => {
   const router = useRouter();
 
   const [filters, _setFilters] = useRecoilState(searchFilters);
+
+  // Sync filter state with the URL query param
   React.useEffect(() => {
     const queryFilterString = router.query[filterParam];
     if (queryFilterString) {
@@ -58,6 +60,7 @@ export const useSearchFilters = () => {
 
   const setFilters = (filters: SearchField[]) => {
     clearLoadedReports();
+    // Sync URL query param with filter state
     router.push({
       pathname: router.pathname,
       query: { [filterParam]: JSON.stringify(filters) },
@@ -65,11 +68,15 @@ export const useSearchFilters = () => {
     _setFilters(filters);
   };
 
-  const add = (filter: Omit<SearchField, "bool">) => {
-    const matchingFilters = filters.filter(
-      ({ field, query }) => filter.field === field && filter.query === query
+  const has = (filter: Omit<SearchField, "bool">) => {
+    return (
+      filters.filter(
+        ({ field, query }) => filter.field === field && filter.query === query
+      ).length >= 1
     );
-    if (matchingFilters.length === 0) {
+  };
+  const add = (filter: Omit<SearchField, "bool">) => {
+    if (!has(filter)) {
       setFilters([...filters, filter]);
     }
   };
@@ -80,7 +87,7 @@ export const useSearchFilters = () => {
     setFilters(newFilters);
   };
 
-  return { filters, add, remove, setAll: setFilters };
+  return { filters, has, add, remove, setAll: setFilters };
 };
 
 export const searchQuery = selectorFamily<
