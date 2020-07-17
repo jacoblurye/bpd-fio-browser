@@ -11,6 +11,7 @@ import SimpleCard from "./SimpleCard";
 const useStyles = makeStyles({
   inlineText: {
     display: "inline",
+    wordWrap: "break-word",
   },
   inlineSearchText: {
     display: "inline",
