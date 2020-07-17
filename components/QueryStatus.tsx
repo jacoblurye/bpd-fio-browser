@@ -8,10 +8,10 @@ const QueryStatus: React.FC = () => {
   const filters = useSearchFilters();
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);
 
-  return (
+  return !isEmpty(filters.filters) ? (
     <Box textAlign="center">
       <Typography variant="subtitle2" color="textSecondary">
-        {resultsLoadable.state === "loading" && !isEmpty(filters.filters)
+        {resultsLoadable.state === "loading"
           ? "loading..."
           : resultsLoadable.state === "hasValue" &&
             resultsLoadable.contents?.result.length === 0
@@ -19,7 +19,7 @@ const QueryStatus: React.FC = () => {
           : ""}
       </Typography>
     </Box>
-  );
+  ) : null;
 };
 
 export default QueryStatus;
