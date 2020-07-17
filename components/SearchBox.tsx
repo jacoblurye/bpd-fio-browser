@@ -16,6 +16,7 @@ import FilterChip from "./FilterChip";
 import getSuggestions from "utils/get-suggestions";
 import { SearchField } from "interfaces";
 import { map } from "lodash";
+import SimpleCard from "./SimpleCard";
 
 const SEARCH_BOX = "search-box";
 
@@ -49,51 +50,58 @@ const SearchBox: React.FC = () => {
 
   return (
     <FormContext {...formInstance}>
-      <form onSubmit={handleSearch}>
-        <Box position="relative">
-          <Box>
-            <TextField
-              name={SEARCH_BOX}
-              ref={searchBoxRef}
-              inputRef={formInstance.register}
-              fullWidth
-              autoFocus
-              onChange={() => {
-                setShowSuggestions(true);
-              }}
-              variant="outlined"
-              placeholder={
-                filters.filters.length > 0
-                  ? "Add another filter"
-                  : "Search 35,000 police records"
-              }
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    style={{ background: "none" }}
-                    onClick={handleSearch}
-                  >
-                    <Search />
-                  </IconButton>
-                ),
-              }}
-              autoComplete="off"
-              autoCorrect="off"
-            />
-          </Box>
-          {showSuggestions && (
-            <Box width="100%" marginTop={1} position="absolute" zIndex={999999}>
-              <Suggestions />
+      <SimpleCard variant="outlined">
+        <form onSubmit={handleSearch}>
+          <Box position="relative">
+            <Box>
+              <TextField
+                autoFocus
+                name={SEARCH_BOX}
+                ref={searchBoxRef}
+                inputRef={formInstance.register}
+                fullWidth
+                onChange={() => {
+                  setShowSuggestions(true);
+                }}
+                variant="outlined"
+                placeholder={
+                  filters.filters.length > 0
+                    ? "Add another filter"
+                    : "Search 35,000 police records"
+                }
+                InputProps={{
+                  endAdornment: (
+                    <IconButton
+                      style={{ background: "none" }}
+                      onClick={handleSearch}
+                    >
+                      <Search />
+                    </IconButton>
+                  ),
+                }}
+                autoComplete="off"
+                autoCorrect="off"
+              />
             </Box>
-          )}
-          {filters.filters.length > 0 && (
-            <Box marginTop={1}>
-              <Paper variant="outlined">
-                <Box padding={1}>
+            {showSuggestions && (
+              <Box
+                width="100%"
+                marginTop={1}
+                position="absolute"
+                zIndex={999999}
+              >
+                <Suggestions />
+              </Box>
+            )}
+            {filters.filters.length > 0 && (
+              <Box marginTop={1}>
+                <SimpleCard variant="outlined">
                   <Box marginBottom={1}>
                     <Grid container justify="space-between" alignItems="center">
                       <Grid item>
-                        <Typography variant="overline">Filters</Typography>
+                        <Typography variant="subtitle2" color="textSecondary">
+                          Filters
+                        </Typography>
                       </Grid>
                       <Grid item>
                         <Tooltip title="clear all filters">
@@ -106,7 +114,6 @@ const SearchBox: React.FC = () => {
                         </Tooltip>
                       </Grid>
                     </Grid>
-                    <Divider />
                   </Box>
                   <Grid container spacing={1}>
                     {filters.filters.map(({ field, query }) => (
@@ -119,12 +126,12 @@ const SearchBox: React.FC = () => {
                       </Grid>
                     ))}
                   </Grid>
-                </Box>
-              </Paper>
-            </Box>
-          )}
-        </Box>
-      </form>
+                </SimpleCard>
+              </Box>
+            )}
+          </Box>
+        </form>
+      </SimpleCard>
     </FormContext>
   );
 };
@@ -139,7 +146,7 @@ const Suggestions: React.FC = () => {
   }
 
   return (
-    <Paper elevation={3}>
+    <Paper elevation={6}>
       <Box padding={1}>
         <FilterChip
           clickable

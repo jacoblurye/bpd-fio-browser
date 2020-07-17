@@ -4,6 +4,7 @@ import { Grid, Typography } from "@material-ui/core";
 import { SearchField } from "interfaces";
 import FilterChip from "./FilterChip";
 import LabelledChip from "./LabelledChip";
+import SimpleCard from "./SimpleCard";
 
 export interface StatsGroupProps {
   title: string;
@@ -13,33 +14,35 @@ export interface StatsGroupProps {
 
 const StatsGroup: React.FC<StatsGroupProps> = ({ title, data, filterKey }) => {
   return (
-    <Grid container direction="column">
-      <Grid item>
-        <Typography variant="overline">{title}</Typography>
-      </Grid>
-      <Grid item>
-        <Grid container spacing={1}>
-          {map(data, (value, label) => (
-            <Grid item key={label}>
-              {filterKey ? (
-                <FilterChip
-                  statistic
-                  label={label}
-                  value={value.toString()}
-                  filterKey={filterKey}
-                />
-              ) : (
-                <LabelledChip
-                  statistic
-                  label={label}
-                  value={value.toString()}
-                />
-              )}
-            </Grid>
-          ))}
+    <SimpleCard variant="outlined">
+      <Grid container direction="column">
+        <Grid item>
+          <Typography variant="overline">{title}</Typography>
+        </Grid>
+        <Grid item>
+          <Grid container spacing={1}>
+            {map(data, (value, label) => (
+              <Grid item key={label}>
+                {filterKey ? (
+                  <FilterChip
+                    statistic
+                    label={label}
+                    value={value.toString()}
+                    filterKey={filterKey}
+                  />
+                ) : (
+                  <LabelledChip
+                    statistic
+                    label={label}
+                    value={value.toString()}
+                  />
+                )}
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </SimpleCard>
   );
 };
 

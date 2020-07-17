@@ -1,10 +1,11 @@
 import React from "react";
 import Layout from "components/Layout";
-import { Grid, Box } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import ReportsList from "components/ReportsList";
 import ResultsSummary from "components/ResultsSummary";
 import SearchBox from "components/SearchBox";
 import WakeupSearch from "components/WakeupSearch";
+import QueryStatus from "components/QueryStatus";
 
 const SearchContainer: React.FC = () => {
   return (
@@ -14,14 +15,13 @@ const SearchContainer: React.FC = () => {
           <SearchBox />
         </Grid>
         <Grid item>
-          <Box m={1}>
-            <ResultsSummary />
-          </Box>
+          <ResultsSummary />
         </Grid>
         <Grid item>
-          <Box m={1}>
-            <ReportsList />
-          </Box>
+          <ReportsList />
+        </Grid>
+        <Grid item>
+          <QueryStatus />
         </Grid>
       </Grid>
       <WakeupSearch />

@@ -1,10 +1,11 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import { Grid, Typography, Box, Divider, Hidden } from "@material-ui/core";
+import { Grid, Typography, Box } from "@material-ui/core";
 import { Dictionary, sum, mapValues } from "lodash";
 import StatsGroup from "./StatsGroup";
 import { useRecoilValueLoadable } from "recoil";
 import { searchSummary } from "state";
+import SimpleCard from "./SimpleCard";
 
 const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
   ssr: false,
@@ -48,18 +49,25 @@ const ResultsSummary: React.FC = () => {
   const genderPercents = getPercents(summary.totalByGender, totalPeople);
 
   return (
-    <Box>
-      <Typography variant="overline">Summary</Typography>
-      <Divider />
+    <SimpleCard variant="outlined">
+      <Typography variant="subtitle1" color="textSecondary">
+        Summary
+      </Typography>
       <Box marginY={1}>
         <Grid container justify="space-between" spacing={1}>
           <Grid item xs={12} sm={12} md={6}>
             <Grid container direction="column" spacing={1}>
               <Grid item>
-                <Typography>
-                  Found {summary.total} field contact
-                  {summary.total !== 1 ? "s" : ""} for the provided filters.
-                </Typography>
+                <SimpleCard variant="outlined">
+                  <Typography variant="body2">
+                    Found{" "}
+                    <strong>
+                      {summary.total} FIO
+                      {summary.total !== 1 ? "s" : ""}
+                    </strong>{" "}
+                    for the provided filters.
+                  </Typography>
+                </SimpleCard>
               </Grid>
               <Grid item>
                 <StatsGroup
@@ -69,9 +77,6 @@ const ResultsSummary: React.FC = () => {
                 />
               </Grid>
               <Grid item>
-                <Divider />
-              </Grid>
-              <Grid item>
                 <StatsGroup
                   title="basis"
                   data={basisPercents}
@@ -79,40 +84,33 @@ const ResultsSummary: React.FC = () => {
                 />
               </Grid>
               <Grid item>
-                <Divider />
-              </Grid>
-              <Grid item>
                 <StatsGroup title="race" data={racePercents} />
-              </Grid>
-              <Grid item>
-                <Divider />
               </Grid>
               <Grid item>
                 <StatsGroup title="gender" data={genderPercents} />
               </Grid>
-              <Hidden mdUp>
-                <Grid item>
-                  <Divider />
-                </Grid>
-                <Grid item />
-              </Hidden>
             </Grid>
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
             <Grid container justify="center">
               <Grid item>
-                <Box height={400} width={[350, 450, 450, 450]}>
-                  <ZipcodeMap zipCounts={summary.totalByZip} />
-                </Box>
-                <Typography variant="caption">
-                  Select a map area to add a location filter
-                </Typography>
+                <SimpleCard variant="outlined">
+                  <Typography variant="overline">
+                    Distribution by Zipcode
+                  </Typography>
+                  <Box height={400} width={[350, 450, 450, 450]}>
+                    <ZipcodeMap zipCounts={summary.totalByZip} />
+                  </Box>
+                  <Typography variant="caption">
+                    Select a map area to add a location filter
+                  </Typography>
+                </SimpleCard>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Box>
-    </Box>
+    </SimpleCard>
   );
 };
 

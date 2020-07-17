@@ -1,10 +1,11 @@
 import React from "react";
 import { FieldContact } from "interfaces";
-import { Typography, Grid, makeStyles, Box, Paper } from "@material-ui/core";
+import { Typography, Grid, makeStyles } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
 import theme from "style/theme";
 import FilterChip from "components/FilterChip";
 import LabelledChip from "./LabelledChip";
+import SimpleCard from "./SimpleCard";
 // import moment from "moment-timezone";
 
 const useStyles = makeStyles({
@@ -43,73 +44,69 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
   //   " (WRONG)";
 
   return (
-    <Paper variant="outlined">
-      <Box padding={1}>
-        <Grid container direction="column" spacing={1}>
-          <Grid item>
-            <Grid container spacing={1}>
-              <Grid item>
-                <FilterChip
-                  label="officer"
-                  filterKey="contactOfficerName"
-                  value={officerName}
-                />
-              </Grid>
-              <Grid item>
-                <FilterChip filterKey="basis" value={basis} />
-              </Grid>
-              <Grid item>
-                <FilterChip
-                  label="frisked"
-                  filterKey="fcInvolvedFriskOrSearch"
-                  value={friskSearch}
-                />
-              </Grid>
-              <Grid item>
-                <FilterChip
-                  clickable
-                  label="area"
-                  filterKey="zip"
-                  value={report.zip}
-                />
-              </Grid>
-              <Grid item xs={12} />
-              {report.people.map((person, i) => {
-                const profile =
-                  person.race === "(not reported)" &&
-                  person.gender === "(not reported)"
-                    ? "(not reported)"
-                    : `${`${person.race} ${person.gender}`} | ${person.age}`;
-                return (
-                  <Grid key={i} item>
-                    <LabelledChip avatar={<Person />} value={profile} />
-                  </Grid>
-                );
-              })}
+    <SimpleCard variant="outlined">
+      <Grid container direction="column" spacing={1}>
+        <Grid item>
+          <Grid container spacing={1}>
+            <Grid item>
+              <FilterChip
+                label="officer"
+                filterKey="contactOfficerName"
+                value={officerName}
+              />
             </Grid>
-          </Grid>
-          <Grid item>
-            {narrativeChunks.map((chunk, i) => {
+            <Grid item>
+              <FilterChip filterKey="basis" value={basis} />
+            </Grid>
+            <Grid item>
+              <FilterChip
+                label="frisked"
+                filterKey="fcInvolvedFriskOrSearch"
+                value={friskSearch}
+              />
+            </Grid>
+            <Grid item>
+              <FilterChip
+                clickable
+                label="area"
+                filterKey="zip"
+                value={report.zip}
+              />
+            </Grid>
+            <Grid item xs={12} />
+            {report.people.map((person, i) => {
+              const profile =
+                person.race === "(not reported)" &&
+                person.gender === "(not reported)"
+                  ? "(not reported)"
+                  : `${`${person.race} ${person.gender}`} | ${person.age}`;
               return (
-                <React.Fragment key={i}>
-                  <Typography className={classes.inlineText}>
-                    {chunk}
-                  </Typography>
-                  {i !== lastChunk && (
-                    <>
-                      {" "}
-                      <Typography className={classes.inlineSearchText}>
-                        {searchTerm}
-                      </Typography>{" "}
-                    </>
-                  )}
-                </React.Fragment>
+                <Grid key={i} item>
+                  <LabelledChip avatar={<Person />} value={profile} />
+                </Grid>
               );
             })}
           </Grid>
         </Grid>
-      </Box>
-    </Paper>
+        <Grid item>
+          {narrativeChunks.map((chunk, i) => {
+            return (
+              <React.Fragment key={i}>
+                <Typography className={classes.inlineText}>{chunk}</Typography>
+                {i !== lastChunk && (
+                  <>
+                    {" "}
+                    <Typography className={classes.inlineSearchText}>
+                      {searchTerm}
+                    </Typography>{" "}
+                  </>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </Grid>
+      </Grid>
+    </SimpleCard>
   );
 };
 

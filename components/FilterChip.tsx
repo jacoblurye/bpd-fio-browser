@@ -48,6 +48,7 @@ const FilterChip: React.FC<FilterChipProps> = ({
   return (
     <LabelledChip
       size="small"
+      statistic={statistic}
       variant={isSelected ? "default" : "outlined"}
       label={displayLabel}
       value={displayValue}
