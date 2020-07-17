@@ -104,6 +104,9 @@ const ResultsSummary: React.FC = () => {
                 <Box height={400} width={[350, 450, 450, 450]}>
                   <ZipcodeMap zipCounts={summary.totalByZip} />
                 </Box>
+                <Typography variant="caption">
+                  Select a map area to add a location filter
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
