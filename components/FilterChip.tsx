@@ -1,9 +1,10 @@
 import React from "react";
-import { Chip, Typography, Grid, ChipProps, Tooltip } from "@material-ui/core";
+import { ChipProps, Tooltip } from "@material-ui/core";
 import { useSearchFilters } from "state";
 import { SearchField } from "interfaces";
 import { getFilterValueDisplay } from "utils/filter-helpers";
 import { RemoveCircle, AddCircle } from "@material-ui/icons";
+import LabelledChip from "./LabelledChip";
 
 interface FilterChipProps extends Omit<ChipProps, "onDelete"> {
   filterKey: SearchField["field"];
@@ -31,11 +32,9 @@ const FilterChip: React.FC<FilterChipProps> = ({
       ? getFilterValueDisplay(filterKey, label)
       : label
     : filterKey;
-  const displayValue = statistic ? (
-    <strong>{value}</strong>
-  ) : (
-    getFilterValueDisplay(filterKey, value)
-  );
+  const displayValue = statistic
+    ? value
+    : getFilterValueDisplay(filterKey, value);
   const actionIcon = (
     <Tooltip title={isSelected ? "remove from filters" : "add to filters"}>
       {isSelected ? (
@@ -47,19 +46,11 @@ const FilterChip: React.FC<FilterChipProps> = ({
   );
 
   return (
-    <Chip
+    <LabelledChip
       size="small"
       variant={isSelected ? "default" : "outlined"}
-      label={
-        <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
-          <Grid item>
-            <Typography variant="overline">{displayLabel}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">{displayValue}</Typography>
-          </Grid>
-        </Grid>
-      }
+      label={displayLabel}
+      value={displayValue}
       onClick={isSelected ? undefined : () => filters.add(filter)}
       onDelete={
         isSelected ? () => filters.remove(filter) : () => filters.add(filter)

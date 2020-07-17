@@ -13,10 +13,10 @@ const LabelledChip: React.FC<LabelledChipProps> = ({
   statistic,
   ...props
 }) => {
+  const chipProps: ChipProps = { size: "small", variant: "outlined", ...props };
+
   return (
     <Chip
-      size="small"
-      variant="outlined"
       label={
         <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
           {label && (
@@ -31,7 +31,7 @@ const LabelledChip: React.FC<LabelledChipProps> = ({
           </Grid>
         </Grid>
       }
-      {...props}
+      {...chipProps}
     />
   );
 };
