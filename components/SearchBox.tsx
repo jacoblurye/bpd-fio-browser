@@ -96,7 +96,7 @@ const SearchBox: React.FC = () => {
                         <Typography variant="overline">Filters</Typography>
                       </Grid>
                       <Grid item>
-                        <Tooltip title="Clear all filters">
+                        <Tooltip title="clear all filters">
                           <IconButton
                             size="small"
                             onClick={() => filters.setAll([])}
