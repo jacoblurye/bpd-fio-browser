@@ -1,8 +1,12 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
-  shape: {
-    borderRadius: 5,
+  overrides: {
+    MuiChip: {
+      root: {
+        borderRadius: 5,
+      },
+    },
   },
 });
 
