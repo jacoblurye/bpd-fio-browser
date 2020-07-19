@@ -76,7 +76,6 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
             </Grid>
             <Grid item xs={12} />
             {report.people.map((person, i) => {
-              console.log(person.ethnicity);
               const ethnicity =
                 person.ethnicity === "hispanic origin" ? "hispanic " : "";
               const profile =
