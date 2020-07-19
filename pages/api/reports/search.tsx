@@ -110,6 +110,7 @@ const getQuerySummary = async (
   const totalByZip = countBy(reports, "zip");
   const totalByBasis = countBy(reports, "basis");
   const totalByRace = countByPersonField(reports, "race");
+  const totalByEthnicity = countByPersonField(reports, "ethnicity");
   const totalByGender = countByPersonField(reports, "gender");
   const totalByAge = countByPersonField(reports, "age");
   const summary: SearchResultSummary = {
@@ -117,6 +118,7 @@ const getQuerySummary = async (
     totalByFrisked,
     totalByZip,
     totalByRace,
+    totalByEthnicity,
     totalByGender,
     totalByBasis,
     totalByAge,

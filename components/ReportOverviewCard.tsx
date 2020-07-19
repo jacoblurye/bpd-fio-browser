@@ -76,11 +76,15 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
             </Grid>
             <Grid item xs={12} />
             {report.people.map((person, i) => {
+              console.log(person.ethnicity);
+              const ethnicity =
+                person.ethnicity === "hispanic origin" ? "hispanic " : "";
               const profile =
                 person.race === "(not reported)" &&
-                person.gender === "(not reported)"
+                person.gender === "(not reported)" &&
+                !ethnicity
                   ? "(not reported)"
-                  : `${`${person.race} ${person.gender}`} | ${person.age}`;
+                  : `${ethnicity}${person.race} ${person.gender} | ${person.age} y.o.`;
               return (
                 <Grid key={i} item>
                   <LabelledChip avatar={<Person />} value={profile} />

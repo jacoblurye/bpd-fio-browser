@@ -46,6 +46,7 @@ const ResultsSummary: React.FC = () => {
   const friskedPercent = getPercents(summary.totalByFrisked, summary.total);
   const basisPercents = getPercents(summary.totalByBasis, summary.total);
   const racePercents = getPercents(summary.totalByRace, totalPeople);
+  const ethnicityPercents = getPercents(summary.totalByEthnicity, totalPeople);
   const genderPercents = getPercents(summary.totalByGender, totalPeople);
 
   return (
@@ -85,6 +86,9 @@ const ResultsSummary: React.FC = () => {
               </Grid>
               <Grid item>
                 <StatsGroup title="race" data={racePercents} />
+              </Grid>
+              <Grid item>
+                <StatsGroup title="ethnicity" data={ethnicityPercents} />
               </Grid>
               <Grid item>
                 <StatsGroup title="gender" data={genderPercents} />

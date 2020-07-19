@@ -66,6 +66,7 @@ export type SearchResultSummary = {
   totalByFrisked: Dictionary<number>;
   totalByZip: Dictionary<number>;
   totalByRace: Dictionary<number>;
+  totalByEthnicity: Dictionary<number>;
   totalByGender: Dictionary<number>;
   totalByBasis: Dictionary<number>;
   totalByAge: Dictionary<number>;
