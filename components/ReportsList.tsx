@@ -37,10 +37,12 @@ const ReportsList: React.FC = () => {
             </Grid>
           </Box>
           {hasNextPage && (
-            <Box marginY={1} textAlign="center">
+            <Box textAlign="center">
               <Button
+                fullWidth
                 size="small"
                 color="primary"
+                variant="outlined"
                 onClick={() => loadMoreReports()}
               >
                 load more reports
