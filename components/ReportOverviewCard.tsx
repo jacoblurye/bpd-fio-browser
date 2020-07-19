@@ -79,10 +79,10 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
               const ethnicity =
                 person.ethnicity === "hispanic origin" ? "hispanic " : "";
               const profile =
-                person.race === "(not reported)" &&
-                person.gender === "(not reported)" &&
+                person.race === "[not reported]" &&
+                person.gender === "[not reported]" &&
                 !ethnicity
-                  ? "(not reported)"
+                  ? "[not reported]"
                   : `${ethnicity}${person.race} ${person.gender} | ${person.age} y.o.`;
               return (
                 <Grid key={i} item>

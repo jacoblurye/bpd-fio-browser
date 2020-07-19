@@ -21,7 +21,9 @@ const LabelledChip: React.FC<LabelledChipProps> = ({
         <Grid container spacing={1} alignItems="baseline" wrap="nowrap">
           {label && (
             <Grid item>
-              <Typography variant="overline">{label}</Typography>
+              <Typography variant="caption" color="textSecondary">
+                {label}
+              </Typography>
             </Grid>
           )}
           <Grid item>
