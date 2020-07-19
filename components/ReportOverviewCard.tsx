@@ -61,7 +61,7 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
             </Grid>
             <Grid item>
               <FilterChip
-                label="frisked"
+                label="frisk search"
                 filterKey="fcInvolvedFriskOrSearch"
                 value={friskSearch}
               />

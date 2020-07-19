@@ -25,7 +25,7 @@ const FIELD_MAP: Record<SearchField["field"], string> = {
   contactOfficerName: "officer",
   zip: "area",
   basis: "basis",
-  fcInvolvedFriskOrSearch: "involved frisk",
+  fcInvolvedFriskOrSearch: "frisk search",
 };
 
 const SearchBox: React.FC = () => {

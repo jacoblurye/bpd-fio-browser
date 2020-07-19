@@ -72,7 +72,7 @@ const ResultsSummary: React.FC = () => {
               </Grid>
               <Grid item>
                 <StatsGroup
-                  title="involved frisk search"
+                  title="frisk search"
                   data={friskedPercent}
                   filterKey="fcInvolvedFriskOrSearch"
                 />
