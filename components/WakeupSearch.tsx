@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilCallback } from "recoil";
-import { searchQuery } from "state";
+import { searchResultQuery } from "state";
 
 const WakeupSearch: React.FC = () => {
   // Issue a random query to the search API to wake up
@@ -9,7 +9,7 @@ const WakeupSearch: React.FC = () => {
     ({ snapshot }) => () => {
       snapshot
         .getPromise(
-          searchQuery({
+          searchResultQuery({
             query: [{ field: "narrative", query: Math.random().toString() }],
             page: true,
             limit: 1,

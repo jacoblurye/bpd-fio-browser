@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import {
   atom,
   selector,
@@ -11,12 +11,11 @@ import {
   useSetRecoilState,
 } from "recoil";
 import {
-  FCSearchResult,
   FieldContact,
   SearchResultSummary,
   SearchField,
+  SearchResult,
 } from "interfaces";
-import { SearchResults } from "flexsearch";
 import { isEqual } from "lodash";
 import { useRouter } from "next/dist/client/router";
 
@@ -90,38 +89,54 @@ export const useSearchFilters = () => {
   return { filters, has, add, remove, setAll: setFilters };
 };
 
-export const searchQuery = selectorFamily<
-  FCSearchResult | undefined,
+const apiWithErrorHandling = async <T>(config: AxiosRequestConfig) => {
+  try {
+    const { data } = await axios(config);
+    return data as T;
+  } catch (e) {
+    // TODO: actually handle errors
+  }
+};
+
+export const searchResultQuery = selectorFamily<
+  SearchResult | undefined,
   { query: SearchField[]; page: string | boolean; limit: number }
 >({
-  key: "searchQuery",
+  key: "searchResultQuery",
   get: (q) => async () => {
     if (q.query) {
-      try {
-        const { data } = await axios.get<FCSearchResult>(
-          "/api/reports/search",
-          {
-            params: { q },
-          }
-        );
-        return data;
-      } catch (e) {
-        // TODO: catch this
-      }
+      return apiWithErrorHandling<SearchResult>({
+        method: "get",
+        url: "/api/reports/search",
+        params: { q },
+      });
     }
-    return undefined;
   },
 });
 
-export const searchNewReports = selector<
-  SearchResults<FieldContact> | undefined
+export const searchResultSummaryQuery = selectorFamily<
+  SearchResultSummary | undefined,
+  { query: SearchField[]; page: string | boolean; limit: number }
 >({
+  key: "searchResultSummaryQuery",
+  get: (q) => async () => {
+    if (q.query) {
+      return apiWithErrorHandling<SearchResultSummary>({
+        method: "get",
+        url: "/api/reports/summary",
+        params: { q },
+      });
+    }
+  },
+});
+
+export const searchNewReports = selector<SearchResult | undefined>({
   key: "searchNewReports",
   get: async ({ get }) => {
     const filters = get(searchFilters);
     const page = get(searchPage);
     if (filters) {
-      return get(searchQuery({ query: filters, page, limit: 25 }))?.results;
+      return get(searchResultQuery({ query: filters, page, limit: 25 }));
     }
     return undefined;
   },
@@ -133,10 +148,10 @@ export const searchSummary = selector<SearchResultSummary | undefined>({
     const filters = get(searchFilters);
     if (filters) {
       // Summary is the same no matter the value of `page` or `limit`
-      const searchResults = get(
-        searchQuery({ query: filters, page: true, limit: 1 })
+      const searchResultSummary = get(
+        searchResultSummaryQuery({ query: filters, page: true, limit: 1 })
       );
-      return searchResults?.summary;
+      return searchResultSummary;
     }
     return undefined;
   },

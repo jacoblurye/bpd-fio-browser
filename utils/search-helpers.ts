@@ -4,8 +4,9 @@ import {
   SearchOptions,
   Person,
   SearchResultSummary,
+  SearchResult,
 } from "interfaces";
-import FlexSearch, { Index, CreateOptions, SearchResults } from "flexsearch";
+import FlexSearch, { Index, CreateOptions } from "flexsearch";
 import { countBy, Dictionary, groupBy, flatMap, uniqBy } from "lodash";
 import loadFieldContactIndex from "__generated__/field-contact-index";
 import flexSearchConfig from "flexsearch.json";
@@ -66,7 +67,7 @@ export const getQueryResult = async (options: SearchOptions) => {
       ? hiPage.toString()
       : undefined;
 
-  const results: SearchResults<FieldContact> = {
+  const results: SearchResult = {
     result: reports,
     page: loPage.toString(),
     next,

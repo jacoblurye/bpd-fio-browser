@@ -1,11 +1,11 @@
-import { SearchOptions, SearchResult } from "interfaces";
+import { SearchOptions, SearchResultSummary } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { addHeaders, parseJSONQueryParam } from "utils/api-helpers";
-import { getQueryResult } from "utils/search-helpers";
+import { getQuerySummary } from "utils/search-helpers";
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<SearchResult>
+  res: NextApiResponse<SearchResultSummary>
 ) => {
   const query = parseJSONQueryParam<SearchOptions>(req, "q");
   if (query === null) {
@@ -13,8 +13,8 @@ export default async (
   }
 
   // @ts-ignore
-  const results = await getQueryResult(query);
+  const summary = await getQuerySummary(query);
 
   addHeaders(res);
-  return res.json(results);
+  return res.json(summary);
 };

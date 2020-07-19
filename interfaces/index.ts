@@ -72,7 +72,4 @@ export type SearchResultSummary = {
   totalByAge: Dictionary<number>;
 };
 
-export type FCSearchResult = {
-  results: SearchResults<FieldContact>;
-  summary: SearchResultSummary;
-};
+export type SearchResult = SearchResults<FieldContact>;
