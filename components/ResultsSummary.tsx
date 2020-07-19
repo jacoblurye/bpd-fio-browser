@@ -96,21 +96,7 @@ const ResultsSummary: React.FC = () => {
             </Grid>
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
-            <Grid container justify="center">
-              <Grid item>
-                <SimpleCard variant="outlined">
-                  <Typography variant="overline">
-                    Distribution by Zipcode
-                  </Typography>
-                  <Box height={400} width={[350, 450, 450, 450]}>
-                    <ZipcodeMap zipCounts={summary.totalByZip} />
-                  </Box>
-                  <Typography variant="caption">
-                    Select a map area to add a location filter
-                  </Typography>
-                </SimpleCard>
-              </Grid>
-            </Grid>
+            <ZipcodeMap zipCounts={summary.totalByZip} />
           </Grid>
         </Grid>
       </Box>

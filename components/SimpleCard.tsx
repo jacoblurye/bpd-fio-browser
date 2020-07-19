@@ -4,7 +4,9 @@ import { Paper, Box, PaperProps } from "@material-ui/core";
 const SimpleCard: React.FC<PaperProps> = ({ children, ...props }) => {
   return (
     <Paper {...props}>
-      <Box padding={1}>{children}</Box>
+      <Box height="100%" padding={1}>
+        {children}
+      </Box>
     </Paper>
   );
 };
