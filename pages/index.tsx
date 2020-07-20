@@ -9,7 +9,7 @@ import QueryStatus from "components/QueryStatus";
 
 const SearchContainer: React.FC = () => {
   return (
-    <Layout title="Reports | Boston Police Department FIO Data">
+    <Layout title="Search">
       <Grid container direction="column" spacing={1}>
         <Grid item>
           <SearchBox />
