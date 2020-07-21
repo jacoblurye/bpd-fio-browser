@@ -33,7 +33,7 @@ axios
     transformResponse: [(data) => data],
   })
   .then(({ data: dataStr }) => {
-    const noNullDataStr = dataStr.replace(/:null,/g, ':"[not reported]",');
+    const noNullDataStr = dataStr.replace(/:null,/g, ':"not reported",');
     const data = JSON.parse(noNullDataStr);
 
     // Build and save a flexsearch index

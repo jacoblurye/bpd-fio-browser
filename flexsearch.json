@@ -9,8 +9,9 @@
       "zip",
       "basis",
       "fcInvolvedFriskOrSearch",
-      "people[gender]",
-      "people[race]"
+      "includedGenders",
+      "includedRaces",
+      "includedEthnicities"
     ]
   }
 }

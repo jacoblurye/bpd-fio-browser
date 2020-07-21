@@ -19,7 +19,10 @@ export type FieldContact = {
   state: string;
   zip: string;
   keySituations: string;
-  summonsissued: "Y";
+  summonsissued: string;
+  includedGenders: string;
+  includedEthnicities: string;
+  includedRaces: string;
   people: Person[];
   // etc...?
 };
@@ -51,7 +54,13 @@ export type Officer = {
 export type SuggestibleField = "basis" | "contactOfficerName" | "zip";
 
 export type SearchField = {
-  field: SuggestibleField | "narrative" | "fcInvolvedFriskOrSearch";
+  field:
+    | SuggestibleField
+    | "narrative"
+    | "fcInvolvedFriskOrSearch"
+    | "includedGenders"
+    | "includedRaces"
+    | "includedEthnicities";
   query: string;
   bool?: "and" | "or" | "not";
 };

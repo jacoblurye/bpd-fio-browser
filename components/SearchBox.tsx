@@ -26,6 +26,9 @@ const FIELD_MAP: Record<SearchField["field"], string> = {
   zip: "area",
   basis: "basis",
   fcInvolvedFriskOrSearch: "frisk search",
+  includedGenders: "gender",
+  includedRaces: "race",
+  includedEthnicities: "ethnicity",
 };
 
 const SearchBox: React.FC = () => {

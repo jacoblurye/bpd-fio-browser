@@ -1,6 +1,7 @@
 import uniqueValues from "__generated__/unique-values.json";
+import zipToNeighborhood from "json/zip-to-neighborhood.json";
 import FlexSearch, { Index } from "flexsearch";
-import { mapValues, flatMap } from "lodash";
+import { mapValues, flatMap, Dictionary } from "lodash";
 import { SuggestibleField } from "interfaces";
 
 const nonNullValues = mapValues(uniqueValues, (values: (string | null)[]) =>
@@ -17,14 +18,23 @@ const createIndex = (field: SuggestibleField) => {
   return index;
 };
 
-const indexes: Record<SuggestibleField, Index<string>> = {
+const indexes: Dictionary<Index<string>> = {
   contactOfficerName: createIndex("contactOfficerName"),
-  zip: createIndex("zip"),
   basis: createIndex("basis"),
 };
 
 const limit = 5;
 const searchField = (field: SuggestibleField, query: string) => {
+  if (field === "zip") {
+    return Object.entries(zipToNeighborhood)
+      .filter(
+        ([zip, area]) =>
+          query && (area.startsWith(query) || zip.startsWith(query))
+      )
+      .slice(0, limit)
+      .map(([zip]) => zip);
+  }
+
   const index = indexes[field];
   // @ts-ignore
   const itemIndexes: number[] = index.search(query, { limit });

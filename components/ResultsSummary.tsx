@@ -85,13 +85,25 @@ const ResultsSummary: React.FC = () => {
                 />
               </Grid>
               <Grid item>
-                <StatsGroup title="race" data={racePercents} />
+                <StatsGroup
+                  title="race"
+                  data={racePercents}
+                  filterKey="includedRaces"
+                />
               </Grid>
               <Grid item>
-                <StatsGroup title="ethnicity" data={ethnicityPercents} />
+                <StatsGroup
+                  title="ethnicity"
+                  data={ethnicityPercents}
+                  filterKey="includedEthnicities"
+                />
               </Grid>
               <Grid item>
-                <StatsGroup title="gender" data={genderPercents} />
+                <StatsGroup
+                  title="gender"
+                  data={genderPercents}
+                  filterKey="includedGenders"
+                />
               </Grid>
             </Grid>
           </Grid>

@@ -34,10 +34,10 @@ const makeRequired = (field: SearchField): SearchField => ({
   bool: "and",
 });
 
-const getAllQueryResults = async (query: SearchField[]) => {
+const getAllQueryResults = async (filters: SearchField[]) => {
   const index = getIndex();
 
-  const queryGroups = Object.values(groupBy(query, "field"));
+  const queryGroups = Object.values(groupBy(filters, "field"));
   const queries = queryGroups.reduce((queries, queryGroup) => {
     return queries.length > 0
       ? flatMap(queryGroup, (q) =>
@@ -87,9 +87,15 @@ const countByPersonField = (
   }, {});
 };
 
+const SUMMARY_CACHE: Dictionary<SearchResultSummary> = {};
 export const getQuerySummary = async ({
   query,
 }: SearchOptions): Promise<SearchResultSummary> => {
+  const queryString = JSON.stringify(query);
+  if (queryString in SUMMARY_CACHE) {
+    return SUMMARY_CACHE[queryString];
+  }
+
   // @ts-ignore
   const reports: FieldContact[] = await getAllQueryResults(query);
   const total = reports.length;
@@ -110,6 +116,8 @@ export const getQuerySummary = async ({
     totalByBasis,
     totalByAge,
   };
+
+  SUMMARY_CACHE[queryString] = summary;
 
   return summary;
 };
