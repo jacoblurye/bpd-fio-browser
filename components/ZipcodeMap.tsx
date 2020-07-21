@@ -78,6 +78,7 @@ const ZipcodeMap: React.FC<ZipcodeMapProps> = ({ zipCounts }) => {
             ref={mapRef}
             bounds={mapBounds}
             zoom={11}
+            scrollWheelZoom={false}
           >
             <TileLayer
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
