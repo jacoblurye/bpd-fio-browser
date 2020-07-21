@@ -9,6 +9,7 @@ export const addObjectValues = (
   return keyArray.reduce((prev, key) => {
     const val1 = obj1[key] || 0;
     const val2 = obj2[key] || 0;
-    return { ...prev, [key]: val1 + val2 };
-  }, {});
+    prev[key] = val1 + val2;
+    return prev;
+  }, {} as Dictionary<number>);
 };
