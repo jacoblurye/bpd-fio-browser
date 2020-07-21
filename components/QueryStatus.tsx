@@ -1,20 +1,22 @@
 import React from "react";
 import { Box, Typography } from "@material-ui/core";
 import { useRecoilValueLoadable } from "recoil";
-import { searchNewReports, useSearchFilters } from "state";
+import { searchNewReports, useSearchFilters, searchSummary } from "state";
 import { isEmpty } from "lodash";
 
 const QueryStatus: React.FC = () => {
   const filters = useSearchFilters();
-  const resultsLoadable = useRecoilValueLoadable(searchNewReports);
+  const summaryLoadable = useRecoilValueLoadable(searchSummary);
+  const reportsLoadable = useRecoilValueLoadable(searchNewReports);
 
   return !isEmpty(filters.filters) ? (
     <Box textAlign="center">
       <Typography variant="subtitle2" color="textSecondary">
-        {resultsLoadable.state === "loading"
+        {reportsLoadable.state === "loading" ||
+        summaryLoadable.state === "loading"
           ? "loading..."
-          : resultsLoadable.state === "hasValue" &&
-            resultsLoadable.contents?.result.length === 0
+          : reportsLoadable.state === "hasValue" &&
+            reportsLoadable.contents?.result.length === 0
           ? "found no results for the provided filters"
           : ""}
       </Typography>
