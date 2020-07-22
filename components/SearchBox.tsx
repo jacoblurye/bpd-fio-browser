@@ -66,9 +66,7 @@ const SearchBox: React.FC = () => {
                 setShowSuggestions(true);
               }}
               variant="outlined"
-              placeholder={
-                "Enter a search phrase, police officer name, or neighborhood/zipcode"
-              }
+              placeholder="Add report filters"
               InputProps={{
                 endAdornment: (
                   <IconButton

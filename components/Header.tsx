@@ -47,7 +47,7 @@ const Header: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <Grid container justify="space-between" alignItems="baseline">
+    <Grid container justify="space-between" alignItems="baseline" spacing={2}>
       <Grid item>
         <Grid container alignItems="center" spacing={1} wrap="nowrap">
           <Grid item>
@@ -68,9 +68,12 @@ const Header: React.FC = () => {
             <Chip size="small" variant="outlined" label="BETA" />
           </Grid>
         </Grid>
+        <Typography variant="body2" color="textSecondary">
+          Search 35,000 Boston police stop reports
+        </Typography>
       </Grid>
       <Grid item>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} wrap="nowrap">
           <Grid item>
             <HeaderLink href="/about">
               <Typography>About</Typography>
