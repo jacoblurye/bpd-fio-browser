@@ -37,6 +37,10 @@ const makeRequired = (field: SearchField): SearchField => ({
 const getAllQueryResults = async (filters: SearchField[]) => {
   const index = getIndex();
 
+  if (filters.length === 0) {
+    return index.where(() => true);
+  }
+
   const queryGroups = Object.values(groupBy(filters, "field"));
   const queries = queryGroups.reduce((queries, queryGroup) => {
     return queries.length > 0

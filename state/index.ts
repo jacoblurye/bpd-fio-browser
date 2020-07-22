@@ -135,10 +135,7 @@ export const searchNewReports = selector<SearchResult | undefined>({
   get: async ({ get }) => {
     const filters = get(searchFilters);
     const page = get(searchPage);
-    if (filters) {
-      return get(searchResultQuery({ query: filters, page, limit: 25 }));
-    }
-    return undefined;
+    return get(searchResultQuery({ query: filters, page, limit: 25 }));
   },
 });
 

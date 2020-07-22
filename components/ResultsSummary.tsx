@@ -4,25 +4,30 @@ import { Grid, Typography, Box } from "@material-ui/core";
 import { Dictionary, sum, mapValues } from "lodash";
 import StatsGroup from "./StatsGroup";
 import { useRecoilValueLoadable } from "recoil";
-import { searchSummary } from "state";
+import { searchSummary, useSearchFilters } from "state";
 import SimpleCard from "./SimpleCard";
+import { SearchResultSummary } from "interfaces";
 
 const ZipcodeMap = dynamic(() => import("components/ZipcodeMap"), {
   ssr: false,
 });
 
-const ResultsSummary: React.FC = () => {
+export interface ResultsSummaryProps {
+  initialSummary: SearchResultSummary;
+}
+
+const ResultsSummary: React.FC<ResultsSummaryProps> = ({ initialSummary }) => {
+  const hasFilters = useSearchFilters().filters.length > 0;
   const summaryLoadable = useRecoilValueLoadable(searchSummary);
 
-  if (summaryLoadable.state !== "hasValue") {
+  if (hasFilters && summaryLoadable.state !== "hasValue") {
     return null;
   }
 
-  const summary = summaryLoadable.contents;
-
-  if (!summary || summary.total === 0) {
-    return null;
-  }
+  const summary =
+    summaryLoadable.state === "hasValue" && summaryLoadable.contents
+      ? summaryLoadable.contents
+      : initialSummary;
 
   const getPercent = (n: number, total: number) => {
     const percent = Math.round((n / total) * 100);
@@ -49,6 +54,13 @@ const ResultsSummary: React.FC = () => {
   const ethnicityPercents = getPercents(summary.totalByEthnicity, totalPeople);
   const genderPercents = getPercents(summary.totalByGender, totalPeople);
 
+  const fioCountText = (
+    <strong>
+      {summary.total} FIO
+      {summary.total !== 1 ? "s" : ""}
+    </strong>
+  );
+
   return (
     <SimpleCard variant="outlined">
       <Typography variant="subtitle1" color="textSecondary">
@@ -61,12 +73,11 @@ const ResultsSummary: React.FC = () => {
               <Grid item>
                 <SimpleCard variant="outlined">
                   <Typography variant="body2">
-                    Found{" "}
-                    <strong>
-                      {summary.total} FIO
-                      {summary.total !== 1 ? "s" : ""}
-                    </strong>{" "}
-                    for the provided filters.
+                    {hasFilters ? (
+                      <>Found {fioCountText} for the provided filters.</>
+                    ) : (
+                      <>Showing results for all {fioCountText}.</>
+                    )}
                   </Typography>
                 </SimpleCard>
               </Grid>

@@ -1,13 +1,21 @@
 import React from "react";
 import Layout from "components/Layout";
 import { Grid } from "@material-ui/core";
-import ReportsList from "components/ReportsList";
-import ResultsSummary from "components/ResultsSummary";
+import ReportsList, { ReportsListProps } from "components/ReportsList";
+import ResultsSummary, { ResultsSummaryProps } from "components/ResultsSummary";
 import SearchBox from "components/SearchBox";
 import WakeupSearch from "components/WakeupSearch";
 import QueryStatus from "components/QueryStatus";
+import { GetStaticProps } from "next";
+import { getQueryResult, getQuerySummary } from "utils/search-helpers";
+import { SearchOptions } from "interfaces";
 
-const SearchContainer: React.FC = () => {
+type SearchContainerProps = ReportsListProps & ResultsSummaryProps;
+
+const SearchContainer: React.FC<SearchContainerProps> = ({
+  initialSummary,
+  initialReports,
+}) => {
   return (
     <Layout title="Search">
       <Grid container direction="column" spacing={1}>
@@ -15,10 +23,10 @@ const SearchContainer: React.FC = () => {
           <SearchBox />
         </Grid>
         <Grid item>
-          <ResultsSummary />
+          <ResultsSummary initialSummary={initialSummary} />
         </Grid>
         <Grid item>
-          <ReportsList />
+          <ReportsList initialReports={initialReports} />
         </Grid>
         <Grid item>
           <QueryStatus />
@@ -27,6 +35,16 @@ const SearchContainer: React.FC = () => {
       <WakeupSearch />
     </Layout>
   );
+};
+
+export const getStaticProps: GetStaticProps<SearchContainerProps> = async () => {
+  const queryAll: SearchOptions = { query: [], limit: 25 };
+  const [{ result: initialReports }, initialSummary] = await Promise.all([
+    getQueryResult(queryAll),
+    getQuerySummary(queryAll),
+  ]);
+
+  return { props: { initialSummary, initialReports } };
 };
 
 export default SearchContainer;

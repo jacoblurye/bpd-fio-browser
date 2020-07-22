@@ -5,24 +5,32 @@ import {
   useLoadMoreReports,
   searchNewReports,
   useReports,
-  searchSummary,
+  useSearchFilters,
 } from "state";
 import { useRecoilValueLoadable } from "recoil";
 import SimpleCard from "./SimpleCard";
+import { FieldContact } from "interfaces";
 
-const ReportsList: React.FC = () => {
-  const summaryHasLoaded =
-    useRecoilValueLoadable(searchSummary).state === "hasValue";
+export interface ReportsListProps {
+  initialReports: FieldContact[];
+}
+
+const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
+  const hasFilters = useSearchFilters().filters.length > 0;
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);
+  const reports = useReports() || initialReports;
+  const loadMoreReports = useLoadMoreReports();
+
+  if (hasFilters && resultsLoadable.state !== "hasValue") {
+    return null;
+  }
+
   const hasNextPage =
     resultsLoadable.state === "hasValue" && resultsLoadable.contents?.next;
 
-  const reports = useReports();
-  const loadMoreReports = useLoadMoreReports();
-
   return (
     <>
-      {summaryHasLoaded && reports.length > 0 && (
+      {reports.length > 0 && (
         <SimpleCard variant="outlined">
           <Typography variant="subtitle1" color="textSecondary">
             Reports
