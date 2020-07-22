@@ -1,16 +1,15 @@
 import React from "react";
-import {
-  makeStyles,
-  Grid,
-  Typography,
-  Box,
-  Chip,
-  Hidden,
-} from "@material-ui/core";
+import { makeStyles, Grid, Typography, Box, Chip } from "@material-ui/core";
 import Link from "next/link";
 import { useRouter } from "next/dist/client/router";
 
 const useStyles = makeStyles((theme) => ({
+  title: {
+    fontSize: 20,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 18,
+    },
+  },
   headerLink: {
     textDecoration: "none",
     cursor: "pointer",
@@ -52,16 +51,9 @@ const Header: React.FC = () => {
         <Grid container alignItems="center" spacing={1} wrap="nowrap">
           <Grid item>
             <Typography variant="overline">
-              <Hidden smUp>
-                <Box fontSize={18}>
-                  <HeaderLink href="/">BPD FIO Browser</HeaderLink>
-                </Box>
-              </Hidden>
-              <Hidden xsDown>
-                <Box fontSize={20}>
-                  <HeaderLink href="/">BPD FIO Browser</HeaderLink>
-                </Box>
-              </Hidden>
+              <Box className={classes.title}>
+                <HeaderLink href="/">BPD FIO Browser</HeaderLink>
+              </Box>
             </Typography>
           </Grid>
           <Grid item>
