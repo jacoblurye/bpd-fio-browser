@@ -6,6 +6,7 @@ import {
   searchNewReports,
   useReports,
   useSearchFilters,
+  searchSummary,
 } from "state";
 import { useRecoilValueLoadable } from "recoil";
 import SimpleCard from "./SimpleCard";
@@ -17,11 +18,19 @@ export interface ReportsListProps {
 
 const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
   const hasFilters = useSearchFilters().filters.length > 0;
+  const summaryHasLoaded =
+    useRecoilValueLoadable(searchSummary).state === "hasValue";
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);
-  const reports = useReports() || initialReports;
+
+  const dynamicReports = useReports();
+  const reports = dynamicReports.length > 0 ? dynamicReports : initialReports;
+
   const loadMoreReports = useLoadMoreReports();
 
-  if (hasFilters && resultsLoadable.state !== "hasValue") {
+  if (
+    hasFilters &&
+    (resultsLoadable.state !== "hasValue" || !summaryHasLoaded)
+  ) {
     return null;
   }
 
