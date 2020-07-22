@@ -1,10 +1,10 @@
 import Layout from "components/Layout";
 import { Typography } from "@material-ui/core";
 
-const AboutPage = () => (
-  <Layout title="About">
+const FeedbackPage = () => (
+  <Layout title="Feedback">
     <Typography>Coming soon!</Typography>
   </Layout>
 );
 
-export default AboutPage;
+export default FeedbackPage;

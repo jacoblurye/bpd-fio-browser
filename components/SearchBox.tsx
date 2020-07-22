@@ -56,36 +56,30 @@ const SearchBox: React.FC = () => {
       <SimpleCard variant="outlined">
         <form onSubmit={handleSearch}>
           <Box position="relative">
-            <Box>
-              <TextField
-                autoFocus
-                name={SEARCH_BOX}
-                ref={searchBoxRef}
-                inputRef={formInstance.register}
-                fullWidth
-                onChange={() => {
-                  setShowSuggestions(true);
-                }}
-                variant="outlined"
-                placeholder={
-                  filters.filters.length > 0
-                    ? "Add another filter"
-                    : "Search 35,000 police records"
-                }
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      style={{ background: "none" }}
-                      onClick={handleSearch}
-                    >
-                      <Search />
-                    </IconButton>
-                  ),
-                }}
-                autoComplete="off"
-                autoCorrect="off"
-              />
-            </Box>
+            <TextField
+              autoFocus
+              name={SEARCH_BOX}
+              ref={searchBoxRef}
+              inputRef={formInstance.register}
+              fullWidth
+              onChange={() => {
+                setShowSuggestions(true);
+              }}
+              variant="outlined"
+              placeholder="Add report filters"
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    style={{ background: "none" }}
+                    onClick={handleSearch}
+                  >
+                    <Search />
+                  </IconButton>
+                ),
+              }}
+              autoComplete="off"
+              autoCorrect="off"
+            />
             {showSuggestions && (
               <Box
                 width="100%"
