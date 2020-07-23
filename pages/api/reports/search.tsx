@@ -1,7 +1,7 @@
 import { SearchOptions, SearchResult } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { addHeaders, parseJSONQueryParam } from "utils/api-helpers";
-import { getQueryResult } from "utils/search-helpers";
+import { getQueryResult } from "search";
 
 export default async (
   req: NextApiRequest,

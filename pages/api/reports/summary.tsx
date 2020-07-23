@@ -1,7 +1,7 @@
 import { SearchOptions, SearchResultSummary } from "interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { addHeaders, parseJSONQueryParam } from "utils/api-helpers";
-import { getQuerySummary } from "utils/search-helpers";
+import { getQuerySummary } from "search";
 
 export default async (
   req: NextApiRequest,

@@ -1,0 +1,17 @@
+module.exports = {
+  tokenize: "strict",
+  cache: 1000,
+  doc: {
+    id: "fcNum",
+    field: [
+      "narrative",
+      "contactOfficerName",
+      "zip",
+      "basis",
+      "fcInvolvedFriskOrSearch",
+      "includedGenders",
+      "includedRaces",
+      "includedEthnicities",
+    ],
+  },
+};

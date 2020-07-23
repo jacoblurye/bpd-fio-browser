@@ -7,7 +7,7 @@ import SearchBox from "components/SearchBox";
 import WakeupSearch from "components/WakeupSearch";
 import QueryStatus from "components/QueryStatus";
 import { GetStaticProps } from "next";
-import { getQueryResult, getQuerySummary } from "utils/search-helpers";
+import { getQueryResult, getQuerySummary } from "search";
 import { SearchOptions } from "interfaces";
 
 type SearchContainerProps = ReportsListProps & ResultsSummaryProps;

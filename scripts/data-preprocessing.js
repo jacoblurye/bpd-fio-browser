@@ -6,8 +6,9 @@ const zlib = require("zlib");
 const { map, uniq } = require("lodash");
 require("dotenv").config();
 
+const config = require("../search/flexsearch.config.js");
+
 const projectPath = path.join(__dirname, "..");
-const configPath = path.join(projectPath, "flexsearch.json");
 
 const generatedDir = "__generated__";
 if (!fs.existsSync(generatedDir)) {
@@ -24,8 +25,6 @@ const uniqValueIndexPath = path.join(
   generatedDir,
   "unique-values.json"
 );
-
-const config = JSON.parse(fs.readFileSync(configPath));
 
 // Download field contact data and generate derived data from it
 axios

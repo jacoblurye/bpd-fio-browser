@@ -9,8 +9,8 @@ import {
 import FlexSearch, { Index, CreateOptions } from "flexsearch";
 import { countBy, Dictionary, groupBy, flatMap, uniqBy } from "lodash";
 import loadFieldContactIndex from "__generated__/field-contact-index";
-import flexSearchConfig from "flexsearch.json";
-import { addObjectValues } from "./collection-helpers";
+import flexSearchConfig from "search/flexsearch.config";
+import { addObjectValues } from "../utils/collection-helpers";
 
 const LIMIT = 1e10;
 
