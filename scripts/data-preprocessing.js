@@ -6,7 +6,7 @@ const zlib = require("zlib");
 const { map, uniq } = require("lodash");
 require("dotenv").config();
 
-const config = require("../search/flexsearch.config.js");
+const config = require("../search/flexsearch.config");
 
 const projectPath = path.join(__dirname, "..");
 
@@ -36,7 +36,7 @@ axios
     const data = JSON.parse(noNullDataStr);
 
     // Build and save a flexsearch index
-    const index = FlexSearch.create(config);
+    const index = FlexSearch.create({ ...config });
     index.add(Object.values(data));
     const indexStr = index.export();
     const deflatedIndex = zlib.deflateSync(indexStr).toString("base64");
@@ -50,7 +50,7 @@ export default () => inflateSync(Buffer.from(index, "base64")).toString()
     fs.writeFileSync(fieldContactIndexPath, indexFile);
 
     // Get unique value lists for key fields
-    const uniqueFields = config.doc.field
+    const uniqueFields = Object.keys(config.doc.field)
       .filter((field) => field !== "narrative")
       .reduce(
         (col, field) => ({

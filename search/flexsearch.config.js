@@ -1,17 +1,19 @@
+const strictTokenize = { tokenize: "strict" };
+const vbarTokenize = { encode: false, tokenize: (v) => v.split("|") };
+
 module.exports = {
-  tokenize: "strict",
   cache: 1000,
   doc: {
     id: "fcNum",
-    field: [
-      "narrative",
-      "contactOfficerName",
-      "zip",
-      "basis",
-      "fcInvolvedFriskOrSearch",
-      "includedGenders",
-      "includedRaces",
-      "includedEthnicities",
-    ],
+    field: {
+      narrative: strictTokenize,
+      contactOfficerName: strictTokenize,
+      zip: strictTokenize,
+      basis: strictTokenize,
+      fcInvolvedFriskOrSearch: strictTokenize,
+      includedGenders: vbarTokenize,
+      includedRaces: vbarTokenize,
+      includedEthnicities: vbarTokenize,
+    },
   },
 };
