@@ -6,7 +6,6 @@ import {
   searchNewReports,
   useReports,
   useSearchFilters,
-  searchSummary,
 } from "state";
 import { useRecoilValueLoadable } from "recoil";
 import SimpleCard from "./SimpleCard";
@@ -18,24 +17,19 @@ export interface ReportsListProps {
 
 const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
   const hasFilters = useSearchFilters().filters.length > 0;
-  const summaryHasLoaded =
-    useRecoilValueLoadable(searchSummary).state === "hasValue";
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);
-
-  const dynamicReports = useReports();
-  const reports = dynamicReports.length > 0 ? dynamicReports : initialReports;
-
   const loadMoreReports = useLoadMoreReports();
-
-  if (
-    hasFilters &&
-    (resultsLoadable.state !== "hasValue" || !summaryHasLoaded)
-  ) {
-    return null;
-  }
-
   const hasNextPage =
     resultsLoadable.state === "hasValue" && resultsLoadable.contents?.next;
+  const isLoadingMore = resultsLoadable.state === "loading";
+
+  const dynamicReports = useReports();
+  const reports =
+    dynamicReports.length > 0 || hasFilters ? dynamicReports : initialReports;
+
+  if (reports.length === 0) {
+    return null;
+  }
 
   return (
     <>
@@ -53,19 +47,19 @@ const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
               ))}
             </Grid>
           </Box>
-          {hasNextPage && (
-            <Box textAlign="center">
-              <Button
-                fullWidth
-                size="small"
-                color="primary"
-                variant="outlined"
-                onClick={() => loadMoreReports()}
-              >
-                load more reports
-              </Button>
-            </Box>
-          )}
+          <Box textAlign="center">
+            <Button
+              fullWidth
+              size="small"
+              color="primary"
+              variant="outlined"
+              disabled={isLoadingMore}
+              onClick={() => loadMoreReports()}
+            >
+              {hasNextPage && "load more reports"}
+              {isLoadingMore && "loading..."}
+            </Button>
+          </Box>
         </SimpleCard>
       )}
     </>
