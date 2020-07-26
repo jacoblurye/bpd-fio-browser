@@ -25,6 +25,7 @@ const FIELD_MAP: Record<SearchField["field"], string> = {
   contactOfficerName: "officer",
   zip: "area",
   basis: "basis",
+  year: "year",
   fcInvolvedFriskOrSearch: "frisk search",
   includedGenders: "gender",
   includedRaces: "race",

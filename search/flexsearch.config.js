@@ -11,6 +11,8 @@ module.exports = {
       zip: strictTokenize,
       basis: strictTokenize,
       fcInvolvedFriskOrSearch: strictTokenize,
+      year: strictTokenize,
+
       includedGenders: vbarTokenize,
       includedRaces: vbarTokenize,
       includedEthnicities: vbarTokenize,

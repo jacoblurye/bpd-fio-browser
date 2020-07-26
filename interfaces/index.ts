@@ -6,6 +6,7 @@ import { SearchResults, SearchOptions as FSSearchOptions } from "flexsearch";
 export type FieldContact = {
   fcNum: string;
   contactDate: number;
+  year: string;
   circumstance: "encountered" | "stopped" | "observed";
   contactOfficer: string;
   contactOfficerName: string;
@@ -51,7 +52,7 @@ export type Officer = {
   stops: FieldContactCollection;
 };
 
-export type SuggestibleField = "basis" | "contactOfficerName" | "zip";
+export type SuggestibleField = "basis" | "contactOfficerName" | "zip" | "year";
 
 export type SearchField = {
   field:

@@ -6,7 +6,6 @@ import theme from "style/theme";
 import FilterChip from "components/FilterChip";
 import LabelledChip from "./LabelledChip";
 import SimpleCard from "./SimpleCard";
-// import moment from "moment-timezone";
 
 const useStyles = makeStyles({
   inlineText: {
@@ -40,9 +39,6 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
   const officerName = report.contactOfficerName;
   const basis = report.basis;
   const friskSearch = report.fcInvolvedFriskOrSearch;
-  // const contactTime =
-  //   moment(report.contactDate).tz("EST").format("MMM. D YYYY @ hh:mm A") +
-  //   " (WRONG)";
 
   return (
     <SimpleCard variant="outlined">
@@ -72,6 +68,14 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
                 label="area"
                 filterKey="zip"
                 value={report.zip}
+              />
+            </Grid>
+            <Grid item>
+              <FilterChip
+                clickable
+                label="year"
+                filterKey="year"
+                value={report.year}
               />
             </Grid>
             <Grid item xs={12} />
