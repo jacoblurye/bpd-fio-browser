@@ -106,6 +106,7 @@ export const getQuerySummary = async ({
   const totalByFrisked = countBy(reports, "fcInvolvedFriskOrSearch");
   const totalByZip = countBy(reports, "zip");
   const totalByBasis = countBy(reports, "basis");
+  const totalByYear = countBy(reports, "year");
   const totalByRace = countByPersonField(reports, "race");
   const totalByEthnicity = countByPersonField(reports, "ethnicity");
   const totalByGender = countByPersonField(reports, "gender");
@@ -119,6 +120,7 @@ export const getQuerySummary = async ({
     totalByGender,
     totalByBasis,
     totalByAge,
+    totalByYear,
   };
 
   SUMMARY_CACHE[queryString] = summary;

@@ -48,7 +48,8 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({ initialSummary }) => {
 
   const totalPeople = sum(Object.values(summary.totalByRace));
 
-  const friskedPercent = getPercents(summary.totalByFrisked, summary.total);
+  const yearPercents = getPercents(summary.totalByYear, summary.total);
+  const friskedPercents = getPercents(summary.totalByFrisked, summary.total);
   const basisPercents = getPercents(summary.totalByBasis, summary.total);
   const racePercents = getPercents(summary.totalByRace, totalPeople);
   const ethnicityPercents = getPercents(summary.totalByEthnicity, totalPeople);
@@ -82,9 +83,12 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({ initialSummary }) => {
                 </SimpleCard>
               </Grid>
               <Grid item>
+                <StatsGroup title="year" data={yearPercents} filterKey="year" />
+              </Grid>
+              <Grid item>
                 <StatsGroup
                   title="frisk search"
-                  data={friskedPercent}
+                  data={friskedPercents}
                   filterKey="fcInvolvedFriskOrSearch"
                 />
               </Grid>

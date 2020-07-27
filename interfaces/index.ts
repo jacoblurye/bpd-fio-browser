@@ -80,6 +80,7 @@ export type SearchResultSummary = {
   totalByGender: Dictionary<number>;
   totalByBasis: Dictionary<number>;
   totalByAge: Dictionary<number>;
+  totalByYear: Dictionary<number>;
 };
 
 export type SearchResult = SearchResults<FieldContact>;
