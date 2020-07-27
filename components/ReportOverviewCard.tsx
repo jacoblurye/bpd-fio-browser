@@ -1,45 +1,72 @@
 import React from "react";
 import { FieldContact } from "interfaces";
-import { Typography, Grid, makeStyles } from "@material-ui/core";
+import { Typography, Grid, makeStyles, fade } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
-import theme from "style/theme";
 import FilterChip from "components/FilterChip";
 import LabelledChip from "./LabelledChip";
 import SimpleCard from "./SimpleCard";
+import { useSearchFilters } from "state";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   inlineText: {
     display: "inline",
     wordWrap: "break-word",
   },
   inlineSearchText: {
     display: "inline",
-    background: theme.palette.success.light,
+    background: fade(theme.palette.info.light, 0.5),
     borderRadius: 5,
-    padding: 3,
+    padding: 2,
+    margin: 1,
   },
-});
+}));
+
+interface NarrativeText {
+  text: string;
+}
+
+const NarrativeText: React.FC<NarrativeText> = ({ text }) => {
+  const classes = useStyles();
+  const { filters } = useSearchFilters();
+  const searchTerms = filters
+    .filter((f) => f.field === "narrative")
+    .map((f) => f.query);
+
+  if (searchTerms.length === 0) {
+    return <Typography>{text}</Typography>;
+  }
+
+  const matchSearchTerms = new RegExp(
+    `[^a-z](${searchTerms.join("|")})[^a-z]`,
+    "gi"
+  );
+  const textChunks = text.split(matchSearchTerms);
+
+  return (
+    <Typography>
+      {textChunks.map((textChunk, chunkNum) => {
+        const isSearchTerm = chunkNum % 2 === 1;
+        return (
+          <React.Fragment key={chunkNum}>
+            <Typography
+              className={
+                isSearchTerm ? classes.inlineSearchText : classes.inlineText
+              }
+            >
+              {textChunk.trimRight()}
+            </Typography>{" "}
+          </React.Fragment>
+        );
+      })}
+    </Typography>
+  );
+};
 
 export interface ReportOverviewCardProps {
   report: FieldContact;
 }
 
 const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
-  const classes = useStyles();
-
-  const searchTerm = undefined;
-  const lowerCaseSearchTerm = undefined;
-  const narrativeChunks = report.narrative
-    ? searchTerm
-      ? report.narrative.split(` ${lowerCaseSearchTerm} `)
-      : [report.narrative]
-    : [];
-  const lastChunk = narrativeChunks.length - 1;
-
-  const officerName = report.contactOfficerName;
-  const basis = report.basis;
-  const friskSearch = report.fcInvolvedFriskOrSearch;
-
   return (
     <SimpleCard variant="outlined">
       <Grid container direction="column" spacing={1}>
@@ -49,17 +76,17 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
               <FilterChip
                 label="officer"
                 filterKey="contactOfficerName"
-                value={officerName}
+                value={report.contactOfficerName}
               />
             </Grid>
             <Grid item>
-              <FilterChip filterKey="basis" value={basis} />
+              <FilterChip filterKey="basis" value={report.basis} />
             </Grid>
             <Grid item>
               <FilterChip
                 label="frisk search"
                 filterKey="fcInvolvedFriskOrSearch"
-                value={friskSearch}
+                value={report.fcInvolvedFriskOrSearch}
               />
             </Grid>
             <Grid item>
@@ -97,21 +124,7 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
           </Grid>
         </Grid>
         <Grid item>
-          {narrativeChunks.map((chunk, i) => {
-            return (
-              <React.Fragment key={i}>
-                <Typography className={classes.inlineText}>{chunk}</Typography>
-                {i !== lastChunk && (
-                  <>
-                    {" "}
-                    <Typography className={classes.inlineSearchText}>
-                      {searchTerm}
-                    </Typography>{" "}
-                  </>
-                )}
-              </React.Fragment>
-            );
-          })}
+          <NarrativeText text={report.narrative} />
         </Grid>
       </Grid>
     </SimpleCard>
