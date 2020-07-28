@@ -47,7 +47,7 @@ const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
               ))}
             </Grid>
           </Box>
-          <Box textAlign="center">
+          {hasNextPage && (
             <Button
               fullWidth
               size="small"
@@ -56,10 +56,9 @@ const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
               disabled={isLoadingMore}
               onClick={() => loadMoreReports()}
             >
-              {hasNextPage && "load more reports"}
-              {isLoadingMore && "loading..."}
+              {isLoadingMore ? "loading..." : "load more reports"}
             </Button>
-          </Box>
+          )}
         </SimpleCard>
       )}
     </>
