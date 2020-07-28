@@ -80,6 +80,13 @@ const ReportOverviewCard: React.FC<ReportOverviewCardProps> = ({ report }) => {
               />
             </Grid>
             <Grid item>
+              <FilterChip
+                label="unit supervisor"
+                filterKey="supervisorName"
+                value={report.supervisorName}
+              />
+            </Grid>
+            <Grid item>
               <FilterChip filterKey="basis" value={report.basis} />
             </Grid>
             <Grid item>

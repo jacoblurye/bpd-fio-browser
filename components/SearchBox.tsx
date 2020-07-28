@@ -23,6 +23,7 @@ const SEARCH_BOX = "search-box";
 const FIELD_MAP: Record<SearchField["field"], string> = {
   narrative: "report contains",
   contactOfficerName: "officer",
+  supervisorName: "unit supervisor",
   zip: "area",
   basis: "basis",
   year: "year",

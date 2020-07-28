@@ -52,7 +52,12 @@ export type Officer = {
   stops: FieldContactCollection;
 };
 
-export type SuggestibleField = "basis" | "contactOfficerName" | "zip" | "year";
+export type SuggestibleField =
+  | "basis"
+  | "contactOfficerName"
+  | "supervisorName"
+  | "zip"
+  | "year";
 
 export type SearchField = {
   field:

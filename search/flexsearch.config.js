@@ -8,6 +8,7 @@ module.exports = {
     field: {
       narrative: strictTokenize,
       contactOfficerName: strictTokenize,
+      supervisorName: strictTokenize,
       zip: strictTokenize,
       basis: strictTokenize,
       fcInvolvedFriskOrSearch: strictTokenize,

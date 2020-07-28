@@ -22,6 +22,7 @@ const indexes: Dictionary<Index<string>> = {
   contactOfficerName: createIndex("contactOfficerName"),
   basis: createIndex("basis"),
   year: createIndex("year"),
+  supervisorName: createIndex("supervisorName"),
 };
 
 const limit = 5;
@@ -46,6 +47,7 @@ const searchField = (field: SuggestibleField, query: string) => {
 
 const getSuggestions = (query: string): Record<SuggestibleField, string[]> => ({
   contactOfficerName: searchField("contactOfficerName", query),
+  supervisorName: searchField("supervisorName", query),
   zip: searchField("zip", query),
   basis: searchField("basis", query),
   year: searchField("year", query),
