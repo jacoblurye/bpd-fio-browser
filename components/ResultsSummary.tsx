@@ -83,7 +83,11 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({ initialSummary }) => {
                 </SimpleCard>
               </Grid>
               <Grid item>
-                <StatsGroup title="year" data={yearPercents} filterKey="year" />
+                <StatsGroup
+                  title="basis"
+                  data={basisPercents}
+                  filterKey="basis"
+                />
               </Grid>
               <Grid item>
                 <StatsGroup
@@ -93,11 +97,7 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({ initialSummary }) => {
                 />
               </Grid>
               <Grid item>
-                <StatsGroup
-                  title="basis"
-                  data={basisPercents}
-                  filterKey="basis"
-                />
+                <StatsGroup title="year" data={yearPercents} filterKey="year" />
               </Grid>
               <Grid item>
                 <StatsGroup
