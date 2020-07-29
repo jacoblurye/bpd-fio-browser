@@ -15,9 +15,9 @@ const Disclaimer: React.FC = () => {
 
   return (
     <Dialog open={!hasVisited}>
-      <DialogTitle>Disclaimer</DialogTitle>
+      <DialogTitle>Notice</DialogTitle>
       <DialogContent>
-        <Typography paragraph>
+        <Typography variant="body2" paragraph>
           The police report information on this site comes from the Boston
           Police Department's Field Interrogation and Observation (FIO){" "}
           <Link
@@ -36,12 +36,18 @@ const Disclaimer: React.FC = () => {
           </Link>
           ).
         </Typography>
-        <Typography paragraph>
-          These FIO reports constitute police officers' accounts of
-          officer-initiated civilian stops. The reports give us insight into
-          where those officers were active, who they were stopping, and how they
-          justified those stops. However, the reliability of the information
-          expressed in these accounts <strong>cannot</strong> be guaranteed.
+        <Typography variant="body2" paragraph>
+          FIO reports contain police officers' accounts of officer-initiated
+          civilian stops. In these reports, officers provide information about
+          where they were active, who they stopped, and how they justified those
+          stops. As such,{" "}
+          <strong>
+            these reports may be innaccurate or otherwise misrepresent police
+            interactions with Boston residents.
+          </strong>
+        </Typography>
+        <Typography variant="body2" paragraph>
+          This site is not affiliated with the BPD.
         </Typography>
       </DialogContent>
       <DialogActions>
