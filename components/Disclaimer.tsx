@@ -47,7 +47,23 @@ const Disclaimer: React.FC = () => {
           </strong>
         </Typography>
         <Typography variant="body2" paragraph>
-          This site is not affiliated with the BPD.
+          Moreover,{" "}
+          <strong>
+            understanding this data requires centering the voices of the
+            Bostonians who are disproportionately the targets of these stops
+          </strong>
+          . See Yawu Miller's{" "}
+          <Link
+            href="https://www.baystatebanner.com/2020/07/29/fioed-some-in-boston-face-weekly-police-stops"
+            target="_blank"
+          >
+            article
+          </Link>{" "}
+          as a starting point.
+        </Typography>
+        <Typography variant="body2" paragraph>
+          This site is an independent project intended for community use. It is
+          not affiliated with the BPD.
         </Typography>
       </DialogContent>
       <DialogActions>
