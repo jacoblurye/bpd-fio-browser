@@ -62,8 +62,15 @@ const Disclaimer: React.FC = () => {
           as a starting point.
         </Typography>
         <Typography variant="body2" paragraph>
-          This site is an independent project intended for community use. It is
-          not affiliated with the BPD.
+          This site is an independent, open source (
+          <Link
+            href="https://github.com/jacoblurye/bpd-fio-browser"
+            target="_blank"
+          >
+            GitHub
+          </Link>
+          ) project intended for community use. It is not affiliated with the
+          BPD.
         </Typography>
       </DialogContent>
       <DialogActions>
