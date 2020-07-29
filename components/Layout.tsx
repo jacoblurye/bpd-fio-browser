@@ -3,6 +3,7 @@ import Head from "next/head";
 import ScrollToTop from "./ScrollToTop";
 import { Box, Divider } from "@material-ui/core";
 import Header from "./Header";
+import Disclaimer from "./Disclaimer";
 
 type Props = {
   children?: ReactNode;
@@ -26,6 +27,7 @@ const Layout = ({ title, children }: Props) => {
       <Box m="auto" maxWidth={1000}>
         {children}
       </Box>
+      {typeof window !== "undefined" && <Disclaimer />}
     </ScrollToTop>
   );
 };
