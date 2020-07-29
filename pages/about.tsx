@@ -52,14 +52,14 @@ const AboutPage = () => (
     <Typography paragraph>
       You can filter FIO reports by{" "}
       <Link
-        href="https://bpd-fio-browser.vercel.app/?filters=%5B%7B%22field%22%3A%22narrative%22%2C%22query%22%3A%nervous%22%7D%5D"
+        href='/?filters=%5B%7B"field"%3A"narrative"%2C"query"%3A"nervous"%7D%5D'
         target="_blank"
       >
         a single keyword
       </Link>{" "}
       or{" "}
       <Link
-        href="https://bpd-fio-browser.vercel.app/?filters=%5B%7B%22field%22%3A%22narrative%22%2C%22query%22%3A%22hoodie%22%7D%5D"
+        href='/?filters=%5B%7B"field"%3A"narrative"%2C"query"%3A"gang%20database"%7D%2C%7B"field"%3A"narrative"%2C"query"%3A"bric"%7D%5D'
         target="_blank"
       >
         {" "}
@@ -67,21 +67,21 @@ const AboutPage = () => (
       </Link>
       ; view all FIOs carried out by a{" "}
       <Link
-        href="https://bpd-fio-browser.vercel.app/?filters=%5B%7B%22field%22%3A%22supervisorName%22%2C%22query%22%3A%22patrick%20byrne%22%7D%5D"
+        href='/?filters=%5B%7B"field"%3A"supervisorName"%2C"query"%3A"patrick%20byrne"%7D%5D'
         target="_blank"
       >
         particular unit
       </Link>{" "}
       or{" "}
       <Link
-        href="https://bpd-fio-browser.vercel.app/?filters=%5B%7B%22field%22%3A%22contactOfficerName%22%2C%22query%22%3A%22zachary%20andrew%20crossen%22%7D%5D"
+        href='/?filters=%5B%7B"field"%3A"contactOfficerName"%2C"query"%3A"zachary%20andrew%20crossen"%7D%5D'
         target="_blank"
       >
         police officer
       </Link>
-      ; or combine all sorts of filters to create a{" "}
+      ; or combine multiple filters of different types to create a{" "}
       <Link
-        href="https://bpd-fio-browser.vercel.app/?filters=%5B%7B%22field%22%3A%22narrative%22%2C%22query%22%3A%22weed%22%7D%2C%7B%22field%22%3A%22basis%22%2C%22query%22%3A%22reasonable%20suspicion%22%7D%2C%7B%22field%22%3A%22fcInvolvedFriskOrSearch%22%2C%22query%22%3A%22y%22%7D%2C%7B%22field%22%3A%22includedRaces%22%2C%22query%22%3A%22black%22%7D%5D"
+        href='/?filters=%5B%7B"field"%3A"narrative"%2C"query"%3A"homeless"%7D%2C%7B"field"%3A"zip"%2C"query"%3A"02118"%7D%2C%7B"field"%3A"fcInvolvedFriskOrSearch"%2C"query"%3A"y"%7D%5D'
         target="_blank"
       >
         specialized view of the data
