@@ -1,5 +1,6 @@
 import Layout from "components/Layout";
 import { Typography, Link } from "@material-ui/core";
+import exampleRoutes from "utils/example-routes";
 
 const AboutPage = () => (
   <Layout title="About">
@@ -51,39 +52,24 @@ const AboutPage = () => (
     </Typography>
     <Typography paragraph>
       You can filter FIO reports by{" "}
-      <Link
-        href='/?filters=%5B%7B"field"%3A"narrative"%2C"query"%3A"nervous"%7D%5D'
-        target="_blank"
-      >
+      <Link href={exampleRoutes.nervous} target="_blank">
         a single keyword
       </Link>{" "}
       or{" "}
-      <Link
-        href='/?filters=%5B%7B"field"%3A"narrative"%2C"query"%3A"gang%20database"%7D%2C%7B"field"%3A"narrative"%2C"query"%3A"bric"%7D%5D'
-        target="_blank"
-      >
+      <Link href={exampleRoutes.gangDB} target="_blank">
         {" "}
         set of keywords
       </Link>
       ; view all FIOs carried out by a{" "}
-      <Link
-        href='/?filters=%5B%7B"field"%3A"supervisorName"%2C"query"%3A"patrick%20byrne"%7D%5D'
-        target="_blank"
-      >
+      <Link href={exampleRoutes.unit} target="_blank">
         particular unit
       </Link>{" "}
       or{" "}
-      <Link
-        href='/?filters=%5B%7B"field"%3A"contactOfficerName"%2C"query"%3A"zachary%20andrew%20crossen"%7D%5D'
-        target="_blank"
-      >
+      <Link href={exampleRoutes.officer} target="_blank">
         police officer
       </Link>
       ; or combine multiple filters of different types to create a{" "}
-      <Link
-        href='/?filters=%5B%7B"field"%3A"narrative"%2C"query"%3A"homeless"%7D%2C%7B"field"%3A"zip"%2C"query"%3A"02118"%7D%2C%7B"field"%3A"fcInvolvedFriskOrSearch"%2C"query"%3A"y"%7D%5D'
-        target="_blank"
-      >
+      <Link href={exampleRoutes.complex} target="_blank">
         specialized view of the data
       </Link>
       . Click on pieces of data in your search results to drill down even

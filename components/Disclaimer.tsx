@@ -11,10 +11,13 @@ import {
 import { useLocalStorage } from "utils/hooks";
 
 const Disclaimer: React.FC = () => {
-  const [hasVisited, setHasVisited] = useLocalStorage("hasVisited", "");
+  const [hasSeenNotice, setHasSeenNotice] = useLocalStorage(
+    "hasSeenNotice",
+    ""
+  );
 
   return (
-    <Dialog open={!hasVisited}>
+    <Dialog open={!hasSeenNotice}>
       <DialogTitle>Notice</DialogTitle>
       <DialogContent>
         <Typography variant="body2" paragraph>
@@ -74,7 +77,7 @@ const Disclaimer: React.FC = () => {
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setHasVisited("true")}>I Understand</Button>
+        <Button onClick={() => setHasSeenNotice("true")}>I Understand</Button>
       </DialogActions>
     </Dialog>
   );

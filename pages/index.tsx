@@ -7,8 +7,13 @@ import SearchBox from "components/SearchBox";
 import WakeupSearch from "components/WakeupSearch";
 import QueryStatus from "components/QueryStatus";
 import { GetStaticProps } from "next";
+import dynamic from "next/dynamic";
 import { getQueryResult, getQuerySummary } from "search";
 import { SearchOptions } from "interfaces";
+
+const NeedHelpAlert = dynamic(() => import("components/NeedHelpAlert"), {
+  ssr: false,
+});
 
 type SearchContainerProps = ReportsListProps & ResultsSummaryProps;
 
@@ -18,6 +23,7 @@ const SearchContainer: React.FC<SearchContainerProps> = ({
 }) => {
   return (
     <Layout title="Search">
+      <NeedHelpAlert />
       <Grid container direction="column" spacing={1}>
         <Grid item>
           <SearchBox />
