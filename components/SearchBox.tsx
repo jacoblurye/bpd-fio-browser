@@ -59,7 +59,6 @@ const SearchBox: React.FC = () => {
         <form onSubmit={handleSearch}>
           <Box position="relative">
             <TextField
-              autoFocus
               name={SEARCH_BOX}
               ref={searchBoxRef}
               inputRef={formInstance.register}
