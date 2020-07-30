@@ -25,7 +25,7 @@ const AboutPage = () => (
       The goal of this site is to make it easier for people to learn about
       police officer activity from the BPD's FIO dataset. While BPD FIO data
       might be of interest to a wide variety of people, its raw format is hard
-      to work with of you don't have some sort of technical background. By
+      to work with if you don't have some sort of technical background. By
       providing an interactive interface, the BPD FIO Browser aims to
       democratize the process of analyzing this data.
     </Typography>
