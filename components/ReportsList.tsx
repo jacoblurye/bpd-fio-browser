@@ -6,6 +6,7 @@ import {
   searchNewReports,
   useReports,
   useSearchFilters,
+  searchSummary,
 } from "state";
 import { useRecoilValueLoadable } from "recoil";
 import SimpleCard from "./SimpleCard";
@@ -17,6 +18,8 @@ export interface ReportsListProps {
 
 const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
   const hasFilters = useSearchFilters().filters.length > 0;
+  const summaryLoaded =
+    useRecoilValueLoadable(searchSummary).state === "hasValue";
   const resultsLoadable = useRecoilValueLoadable(searchNewReports);
   const loadMoreReports = useLoadMoreReports();
   const hasNextPage =
@@ -33,7 +36,7 @@ const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
 
   return (
     <>
-      {reports.length > 0 && (
+      {summaryLoaded && reports.length > 0 && (
         <SimpleCard variant="outlined">
           <Typography variant="subtitle1" color="textSecondary">
             Reports

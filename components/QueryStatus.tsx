@@ -12,7 +12,8 @@ const QueryStatus: React.FC = () => {
   return !isEmpty(filters.filters) ? (
     <Box textAlign="center">
       <Typography variant="subtitle2" color="textSecondary">
-        {summaryLoadable.state === "loading"
+        {summaryLoadable.state === "loading" ||
+        reportsLoadable.state === "loading"
           ? "loading..."
           : reportsLoadable.state === "hasValue" &&
             reportsLoadable.contents?.result.length === 0
