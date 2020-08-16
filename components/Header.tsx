@@ -61,7 +61,7 @@ const Header: React.FC = () => {
           </Grid>
         </Grid>
         <Typography variant="body2" color="textSecondary">
-          Search 35,000 Boston police stop reports
+          Search 44,000 Boston police stop reports
         </Typography>
       </Grid>
       <Grid item>
