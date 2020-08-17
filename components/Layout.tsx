@@ -17,6 +17,13 @@ const Layout = ({ title, children }: Props) => {
         <title>{title} | BPD FIO Browser</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="BPD FIO Browser" />
+        <meta
+          name="twitter:description"
+          content="Search and analyze the Boston Police Department's field interrogation and observation reports."
+        />
       </Head>
       <Box m="auto" maxWidth={1000}>
         <Header />
