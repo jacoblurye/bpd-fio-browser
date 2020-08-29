@@ -16,6 +16,8 @@ export interface ReportsListProps {
   initialReports: FieldContact[];
 }
 
+const isSSR = typeof window === "undefined";
+
 const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
   const hasFilters = useSearchFilters().filters.length > 0;
   const summaryLoaded =
@@ -34,9 +36,11 @@ const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
     return null;
   }
 
+  const shouldRender = !hasFilters || (summaryLoaded && reports.length > 0);
+
   return (
     <>
-      {summaryLoaded && reports.length > 0 && (
+      {shouldRender && (
         <SimpleCard variant="outlined">
           <Typography variant="subtitle1" color="textSecondary">
             Reports
