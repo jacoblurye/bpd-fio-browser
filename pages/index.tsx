@@ -22,7 +22,7 @@ const SearchContainer: React.FC<SearchContainerProps> = ({
   initialReports,
 }) => {
   return (
-    <Layout title="Search">
+    <Layout>
       <NeedHelpAlert />
       <Grid container direction="column" spacing={1}>
         <Grid item>

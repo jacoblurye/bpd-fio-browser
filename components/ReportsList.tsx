@@ -16,8 +16,6 @@ export interface ReportsListProps {
   initialReports: FieldContact[];
 }
 
-const isSSR = typeof window === "undefined";
-
 const ReportsList: React.FC<ReportsListProps> = ({ initialReports }) => {
   const hasFilters = useSearchFilters().filters.length > 0;
   const summaryLoaded =
