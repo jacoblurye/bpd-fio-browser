@@ -14,9 +14,13 @@ const Layout = ({ title, children }: Props) => {
   return (
     <ScrollToTop>
       <Head>
-        <title>{title} | BPD FIO Browser</title>
+        <title>{title ? `${title} - ` : ""}BPD FIO Browser</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="description"
+          content="Browse 44,000 Boston Police Department Field Interrogation and Observation (FIO) reports, filed between 2015 and 2019 as part of the BPD's stop-and-frisk program."
+        />
 
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="BPD FIO Browser" />
