@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.155",
     "@types/react-leaflet": "^2.5.2",
     "@types/recoil": "^0.0.1",
-    "axios": "^0.21.1",
+    "axios": "^1.8.2",
     "dotenv": "^8.2.0",
     "flexsearch": "0.6.32",
     "husky": "^4.2.5",
